@@ -1,0 +1,11 @@
+Operator,City,State,Country,Location,WaterDemand_ML_d,Capacity_ML_d,WCI,GridRegion,Cooling,Status,HydroCoupled,Reservoir,Dam,WUE_L_per_kWh,EWIF_lo,EWIF_hi
+Meta,Lebanon,IN,USA,"Lebanon, IN, USA",4.81,30.3,0.77,MISO-Indiana,Closed loop,Planning only (not operational),No,,,0.2,1.8,3.0
+Google,Council Bluffs,IA,USA,"Council Bluffs, IA, USA",14.62,36.6,1.86,MISO-Iowa,Evaporative,Primary-verified,No,,,1.8,1.5,3.0
+Google,Mayes Co.,OK,USA,"Mayes Co., OK, USA",11.49,52.0,0.44,SPP-Oklahoma,Evaporative,Primary-verified,No,,,1.8,0.8,1.5
+Google,The Dalles,OR,USA,"The Dalles, OR, USA",4.78,45.4,0.18,Columbia-River,Evaporative,Primary-verified,Yes,Columbia-River,The-Dalles-Dam,1.8,5.0,15.0
+Google,Douglas Co.,GA,USA,"Douglas Co., GA, USA",4.60,22.7,0.41,Southern-Co-GA,Evaporative,Primary-verified,No,,,1.8,1.8,3.5
+Microsoft,Wisconsin,,USA,"Wisconsin, , USA",0.087,7.6,0.34,MISO-Wisconsin,Closed loop,Framework secondary,No,,,0.2,1.8,3.0
+Google,Botetourt Co.,VA,USA,"Botetourt Co., VA, USA",7.57,10.2,1.45,PJM-Dominion-VA,Evaporative,Planning only (not operational),No,,,1.8,1.8,3.0
+xAI,Memphis,TN,USA,"Memphis, TN, USA",3.79,22.7,0.57,TVA-Tennessee,Evaporative,Framework secondary,No,,,1.8,2.0,3.5
+Google,Midlothian,TX,USA,"Midlothian, TX, USA",2.29,15.1,0.31,ERCOT-Texas,Evaporative,Primary-verified,No,,,1.8,0.8,1.5
+Google,Henderson,NV,USA,"Henderson, NV, USA",3.73,15.2,0.36,Colorado-River,Evaporative,Primary-verified,Yes,Lake-Mead,Hoover-Dam,1.8,2.0,6.0
