@@ -8,4 +8,4 @@ Microsoft,Wisconsin,0.087,0.77,30,7.6,0.34,MISO-Wisconsin,,,,ren_table6,planning
 Google,"Botetourt Co., VA",7.57,0.77,2.5,10.2,1.45,PJM-Dominion-VA,,,,contracted_2MGD_NOT_operational,planning_not_measured,evaporative,1.8,1.8,3.0,,,,
 xAI,"Memphis, TN",3.79,0.77,4.5,22.7,0.57,TVA-Tennessee,,,,ren_seed_W_in_primary_range_multisite,framework_secondary,evaporative,1.8,2.0,3.5,,,,0.81-7.0 MGD across Colossus 1 and 2; the static row is Ren's single-site value and is indicative only
 Google,"Midlothian, TX",2.29,0.825,2.5,15.1,0.31,ERCOT-Texas,,,,google_fy2024_verified,primary,evaporative,1.8,0.8,1.5,2.734,0.8354,"Google 2026 Env Report, FY2025: 263.6 / 220.2",
-Google,"Henderson, NV",3.73,0.576,2.5,15.2,0.36,Colorado-River,Lake-Mead,Hoover-Dam,Y_source_confirmed,henderson_city_2024_Wverified_r_unconf,primary,evaporative,1.8,2.0,6.0,4.166,0.5960,"Google 2026 Env Report, FY2025: 401.7 / 239.4",
+Google,"Henderson, NV",3.73,0.576,2.5,15.2,0.36,Colorado-River,Lake-Mead,Hoover-Dam,Y_source_confirmed,google_fy2024_verified_city_corroborated,primary,evaporative,1.8,2.0,6.0,4.166,0.5960,"Google 2026 Env Report, FY2025: 401.7 / 239.4",

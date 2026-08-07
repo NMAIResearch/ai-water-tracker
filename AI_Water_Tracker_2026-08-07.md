@@ -1,21 +1,28 @@
 # AI Data-Centre Water Tracker: an open, reproducible referee for data-centre water burden
 
-**NM AI Research** (ORCID 0009-0003-4213-7769) · 7 August 2026 · v0.2 working note
+**NM AI Research** (ORCID 0009-0003-4213-7769) · 7 August 2026 · v0.3 working note
 Repository: `sites.csv` + `reproduce.py` + `SOURCES.md` (stdlib Python, no dependencies) · CC BY 4.0
 
 ## Summary
 
-Ren et al. (arXiv 2606.21760, June 2026) define a Water Consumption Impact index (WCI) for AI data centres and apply it to ten sites, but release no code or data and leave two channels open: the coupling between a data centre and the hydropower on its grid, and the off-site relocation of water that "closed-loop" cooling produces. This note ships the open, reproducible version. It rebuilds the WCI from public inputs and checks each recomputed value against the published one; it adds a hydropower-coupling flag asserted on primary reservoir data; and it adds a relocation ledger that quantifies how much of a site's water footprint moves off-site into the electricity supply. The finding that motivates the exercise: closed-loop cooling does not remove water, it relocates roughly 92 to 95 per cent of the footprint to the grid. v0.2 adds a second reporting year. Recomputing the same index on the operators' FY2025 figures, with capacity and peaking held constant, moves five of the six primary-verified sites up by 15.6 to 33.3 per cent in a single year. The sixth is flat on total withdrawal and conceals the largest change in the set: its draw on potable municipal supply rose more than sixfold while its reclaimed supply fell.
+Ren et al. (arXiv 2606.21760, June 2026) define a Water Consumption Impact index (WCI) for AI data centres and apply it to ten sites, but release no code or data and leave two channels open: the coupling between a data centre and the hydropower on its grid, and the off-site relocation of water that "closed-loop" cooling produces. This note ships the open, reproducible version. It rebuilds the WCI from public inputs and checks each recomputed value against the published one; it adds a hydropower-coupling flag asserted on primary reservoir data; and it adds a relocation ledger that quantifies how much of a site's water footprint moves off-site into the electricity supply. The finding that motivates the exercise: closed-loop cooling does not remove water, it relocates the great majority of the footprint to the grid, roughly 92 to 95 per cent on the modelled inputs used here, with the direction holding across every plausible variation of them. Layer 1b adds a second reporting year. Recomputing the same index on the operators' FY2025 figures, with capacity and peaking held constant, moves five of the six primary-verified sites up by 15.6 to 33.3 per cent in a single year. The sixth is flat on total withdrawal and conceals the largest change in the set: its draw on potable municipal supply rose more than sixfold while its reclaimed supply fell.
 
 Figures are reported with their ranges where they are ranges: the off-site relocation shares are bands, and each per-site WCI is a single reproduced value sitting on an (r, PF) decomposition a reader can vary. Every input is named and motive-tagged. The contribution is the open recomputation and the source ledger, not automated data extraction.
 
-## Scope, stated plainly
+## Scope and standing of evidence
 
-The index operates at three altitudes, and the note claims "per-site" only for what is measured per-site:
+The index operates at three altitudes, and the note claims "per-site" only for what is measured per-site. Every row and layer is graded once, here, and the grading is not restated in the sections that follow.
 
-- **Direct WCI (Layer 1): per-site.** The site's own withdrawal against its host utility's water capacity. Primary-verified for six of ten seed sites, on withdrawal and consumptive ratio alike, across two reporting years.
-- **Off-site footprint (Layer 3): a grid-average bound.** Estimated from a regional electricity-water intensity factor, never a metered per-facility litre count.
-- **Hydropower coupling (Layer 2): a cluster / reservoir-level flag**, a mechanism with a directional price implication, not a dollar forecast.
+| Rows or layer | Rests on | Standing |
+|---|---|---|
+| Six Google rows: Council Bluffs, The Dalles, Douglas, Midlothian, Henderson, Mayes | operator environmental reports, FY2024 and FY2025, both EY-assured | measured, primary |
+| Microsoft Wisconsin | City of Racine release letter, records request PR2025-343 | planning, primary document |
+| Google Botetourt, Meta Lebanon | supply contract and local reporting | planning, secondary |
+| xAI Memphis | utility and advocacy sources, carried as a band | range, secondary |
+| Layer 2, hydropower coupling | USBR 24-Month Study, USGS 14105700 | measured, primary; a reservoir-level flag |
+| Layer 3, relocation ledger | Siddik et al. (2021) EWIF bands, class WUE values | modelled, a grid-average bound |
+
+The direct WCI (Layer 1) is per-site: the site's own withdrawal against its host utility's water capacity. The off-site footprint (Layer 3) is estimated from a regional electricity-water intensity factor and is never a metered per-facility litre count. The hydropower coupling (Layer 2) is a cluster or reservoir-level flag carrying a directional price implication, not a dollar forecast.
 
 ## Method (Layer 1)
 
@@ -59,7 +66,7 @@ Layer 1 stays on FY2024, because that is the year Ren et al. drew on and reprodu
 | Google, Henderson NV | 0.353 | 0.408 | +15.6% |
 | Google, Douglas Co. GA | 0.418 | 0.419 | +0.2% |
 
-Five of the six rise between 15.6 and 33.3 per cent in one reporting year. Across the seven-row measured set the range widens from 0.18 to 1.86 in FY2024 to 0.24 to 2.48 in FY2025, a top-of-range increase of a third. Because the capacity denominator is held constant, this is growth in draw against the same utility rather than a re-estimate of the utility.
+Five of the six rise between 15.6 and 33.3 per cent in one reporting year. Across the seven-row measured set the range widens from 0.18 to 1.86 in FY2024 to 0.24 to 2.48 in FY2025, a top-of-range increase of a third. Six of those seven rows are re-based; xAI Memphis publishes no FY2025 figure and is held at its FY2024 value, which sits inside the range and moves neither bound. Because the capacity denominator is held constant, this is growth in draw against the same utility rather than a re-estimate of the utility.
 
 Douglas County is the exception, and it carries the method point. Its total withdrawal is flat, down 0.8 per cent, so its WCI does not move. Google reports the source split for that site, and underneath the flat total the potable municipal draw rose from 7.4 to 46.3 million gallons, an increase of 526 per cent, while reclaimed wastewater fell 9.7 per cent. An index built on total withdrawal cannot see a sixfold rise in draw on drinking-water supply. Where an operator publishes the split it belongs in its own column, because substitution away from reclaimed supply is a different signal from total volume, and it is the one a municipal system feels. Eemshaven reports the same style of split and is the candidate second instance.
 
@@ -82,7 +89,7 @@ A note on a superseded figure: the earlier projection that Glen Canyon Dam would
 
 which is independent of the site's absolute energy use, so no per-site megawatt figure is required. WUE is the on-site cooling water intensity (about 1.8 L/kWh for evaporative, about 0.2 for closed-loop), EWIF is the grid electricity-water intensity (a grid-average bound), and PUE is fixed at 1.2. The EWIF band per grid is drawn from Siddik, Shehabi and Marston (2021), whose US mean is about 5.1 L/kWh including hydropower reservoir evaporation, with a range from 0 to roughly 85 L/kWh by region.
 
-The result is robust to the exact inputs. Evaporative sites relocate roughly 35 to 91 per cent of their water footprint off-site; closed-loop sites relocate roughly 92 to 95 per cent: the on-site number falls toward zero, but the footprint moves to the grid, it does not vanish. The Dalles sits at 77 to 91 per cent off-site, a consequence of the Columbia grid's high water intensity from hydropower reservoir evaporation, which ties the relocation ledger back to the Layer 2 coupling.
+Evaporative sites relocate roughly 35 to 91 per cent of their water footprint off-site; closed-loop sites relocate roughly 92 to 95 per cent, rounded from a computed 91.5 to 94.7: the on-site number falls toward zero, but the footprint moves to the grid, it does not vanish. The direction is robust and the precise band is not, and the difference matters. Raising the closed-loop WUE from 0.2 to 0.3 L/kWh, a shift well inside the uncertainty of a class estimate, moves the share to 88 to 92 per cent; taking the low EWIF from 1.8 to 1.0 gives 86 per cent. What no plausible perturbation removes is the conclusion itself: even at five times the assumed WUE the off-site share is still 68 to 78 per cent. Read the band as a consequence of two estimated inputs and the majority-relocation finding as the result that survives them. The Dalles sits at 77 to 91 per cent off-site, a consequence of the Columbia grid's high water intensity from hydropower reservoir evaporation, which ties the relocation ledger back to the Layer 2 coupling.
 
 The empirical anchor is Morrison, Strubell et al. (2025, ICLR), who report a 20-million to 13-billion-parameter model series consuming 2.769 million litres of water even on an "extremely water-efficient" data centre, with model development at about half of training. Their finding that training power fluctuates between roughly 15 and 85 per cent of maximum draw is direct support for the peaking factor in the WCI.
 
@@ -94,7 +101,7 @@ Layers 1 to 3 are quantity channels. A distinct quality channel is flagged but n
 
 - **Bands, not points.** r, PF and EWIF are ranges; the decomposition is the honest output. Peer-reviewed support: Zhang et al. (2025, NeurIPS, "PCAM") show that deterministic footprint accounting understates spatial and temporal grid variance badly enough that a probabilistic treatment cuts error from about 108 to about 7 per cent.
 - **The measured set is small and concentrated.** With the three planning rows excluded, seven sites remain and six of them are Google. The measured layer is close to a single-operator dataset, and its behaviour across two reporting years reflects one company's disclosure practice as much as it reflects the sector.
-- **Off-site water is a grid-average bound**, not a per-facility meter.
+- **Reproducibility is not neutrality.** Open recomputation gives calculation transparency; it does not by itself remove seed-selection or imputation bias. That is why the seed set is Ren et al.'s Table 6 rather than author-chosen, and why every estimate is named and motive-tagged.
 - **Static-bounds boundary.** This tracker uses grid-average intensities and annual reservoir studies. It does not attempt real-time macro-grid simulation; a dynamic per-balancing-authority EWIF (via the LBL Water IMPACT Tool) is the natural next version.
 - **Reproducible means open recomputation, not scraping.** `sites.csv` is manually curated from cited primaries, because operator environmental reports are non-standardised and shift boundaries year on year. The script recomputes and self-checks; anyone can change an input and re-run.
 - **Motive-neutral.** Developers' "we are a fraction of agriculture" counter is correct and stays in; the vendor "closed-loop is near-zero water" framing is corrected by Layer 3. The accurate counter is left standing and the overstated one is checked against the same method.
@@ -108,11 +115,23 @@ A literature sweep confirms the gap and narrows it. The nearest neighbour, Morri
     python3 reproduce.py            # print the table, the flags, and the relocation ledger
     python3 reproduce.py --tol 0.03 # tighten the reproduction tolerance
 
-The exit code is non-zero if any row fails the reproduction check.
+The exit code is non-zero if any row fails the reproduction check. On the seed as shipped it is always non-zero: two of Ren et al.'s ten rows do not reproduce within tolerance, Mayes at 6 per cent and Wisconsin at 22 per cent, and those flags are part of the finding rather than a fault to be cleared.
 
 ## Verification
 
-Verification: every per-site withdrawal and consumptive ratio for the six Google rows is traced to Google's own environmental reports, FY2024 in the 2025 report and FY2025 in the 2026 report, both independently assured by EY. The Microsoft Wisconsin row is traced to the City of Racine's release letter for public records request PR2025-343, 17 September 2025, which describes the figures as estimated water use for a site under construction; the underlying data table has not been released and its digits come from Wisconsin Public Radio and Wisconsin Examiner, both 17 September 2025. Reservoir figures come from the USBR 24-Month Study and USGS 14105700. EWIF bands, the peaking factors and the consumptive ratios assigned to non-Google operators are estimates, not site measurements, and are tagged as such in `SOURCES.md`.
+The document behind each row, in the order of the standing table above. The reasoning for each is in Results; this section names the sources only.
+
+| Rows or layer | Document |
+|---|---|
+| Six Google rows | Google 2025 Environmental Report (FY2024) and 2026 Environmental Report (FY2025), both independently assured by EY; utility open-records for Mayes and Henderson |
+| Microsoft Wisconsin | City of Racine release letter for public records request PR2025-343, 17 September 2025. The released data table itself is unpublished, so its digits come from Wisconsin Public Radio and Wisconsin Examiner, both 17 September 2025 |
+| Google Botetourt | Western Virginia Water Authority agreement, October 2025, contracted 2 MGD rising to a potential 8 MGD; reported by Cardinal News, Virginia Business and a Roanoke Rambler records request |
+| Meta Lebanon | Daily Journal and Indiana Capital Chronicle, 11 to 12 February 2026, for the construction start; Citizens-Lebanon supply ramp for the LEAP district, 2 MGD in 2027 to 25 MGD by 2031, for the circulating figures |
+| xAI Memphis | Protect Our Aquifer; Memphis Light, Gas and Water |
+| Layer 2 | USBR Lower and Upper Colorado 24-Month Study, June 2026; USGS gauge 14105700 |
+| Layer 3 | Siddik, Shehabi and Marston (2021), Environmental Research Letters 16 064017, doi:10.1088/1748-9326/abfba1, for the EWIF bands |
+
+Everything in the last four rows is established by reporting, contract documents or a published model rather than by an operator's assured disclosure, which is why none of them enters the measured set. The WUE class values, the peaking factors and the consumptive ratios assigned to non-Google operators are estimates rather than site measurements. Each is named in `SOURCES.md`, and each row carries its standing in the `motive_tier` column of `sites.csv`.
 
 ## Conflict of interest and scope
 
@@ -122,16 +141,16 @@ literature search and drafting. The assisting model is not always a neutral part
 to the subject matter: Anthropic contracts for AI data centres, so this work is
 non-neutral on the buildout. All operators are scored the same way.
 
-Guarantee: every anchor claim is traced to the primary document named in the
-Verification note, reproduce.py regenerates every table from sites.csv. A reader
-can check this without trusting either party. Reproducibility gives calculation
-transparency; it does not by itself remove seed-selection or imputation bias,
-which is why the seed set is Ren et al.'s Table 6 rather than author-chosen and
-every estimate is named and motive-tagged.
+Guarantee: every measured claim is traced to the primary document named in the
+Verification note, and reproduce.py regenerates both tables from sites.csv.
+Modelled or estimated inputs are identified as such in the Verification note
+rather than presented as measurements. A reader can check this without
+trusting either party.
 
-What the author cannot guarantee: text drafted by a language model can carry
-errors that are locally plausible, consistent in tone with the surrounding prose,
-and therefore survive review. Several methods have been deployed to mitigate
+What the author cannot guarantee: a language model's output can be wrong in ways
+that survive review. In prose the error is locally plausible and consistent in
+tone with what surrounds it; in code it simply runs, and a wrong constant or a
+mis-set filter still returns a clean number. Several methods have been deployed to mitigate
 this, including explicit instructions, internal red-teaming and cross-lab
 blindspot checks, but the author does not claim the review is exhaustive.
 Corrections are logged against the DOI when surfaced.
@@ -143,3 +162,10 @@ analysis and open-science documentation only, not investment advice.
 
 Primary and public throughout. Operator environmental reports (Google 2025 Environmental Report, FY2024, and Google 2026 Environmental Report, FY2025, both EY-assured; utility open-records for Mayes and Henderson; City of Racine public records request PR2025-343 release letter, 17 September 2025, for Wisconsin); USGS 14105700 (Columbia at The Dalles); USBR Lower and Upper Colorado 24-Month Study (June 2026); Siddik, Shehabi and Marston (2021, Environ. Res. Lett. 16 064017) for EWIF; Morrison, Strubell et al. (2025, ICLR, arXiv 2503.05804) and Zhang et al. (2025, NeurIPS) for the empirical and methodological anchors; Ren et al. (arXiv 2606.21760) as the framework anchor and seed, cited not copied. Full motive-tiered ledger in `SOURCES.md`.
 
+## Version history
+
+*Corrections are logged rather than silently applied; no finding has been reversed. The full trail is in `SOURCES.md`.*
+
+- **v0.3 (7 August 2026).** Bundle alignment. No figure, table or finding changed. The README was rebuilt against this note, the evidence standing of every row is now stated once in a single table, and the Layer 3 band is reported with its sensitivity rather than as a robust result.
+- **v0.2 (7 August 2026).** Added Layer 1b, the FY2025 re-base with capacity and peaking held constant. Re-tagged Microsoft Wisconsin as planning rather than measured, taking the planning rows to three across three operators.
+- **v0 (published 12 July 2026, note dated 11 July, record 10.5281/zenodo.21318961).** First public version: the WCI reproduced and opened, the hydropower coupling, and the relocation ledger.

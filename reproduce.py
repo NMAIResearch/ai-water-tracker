@@ -36,8 +36,20 @@ convenience, the decomposition is the honest output. Stdlib only.
 
 Usage:
     python3 reproduce.py                 # read sites.csv, print the table
-    python3 reproduce.py --tol 0.05      # set the reproduction tolerance (rel.)
+    python3 reproduce.py --tol 0.03      # tighten the reproduction tolerance (rel.)
     python3 reproduce.py --csv other.csv
+
+Exit code is 1 whenever a row is flagged. On the seed as shipped that is always:
+two of Ren et al.'s ten rows do not reproduce within tolerance (Mayes at 6 per
+cent, Wisconsin at 22 per cent). The flags are part of the finding, not a fault
+to be cleared.
+
+Disclosure: this script was written with the assistance of Anthropic Opus
+4.8-5.0. A language model's output can be wrong in ways that survive review; in
+code it simply runs, and a wrong constant or a mis-set filter still returns a
+clean number. The method it implements, and the sourcing of every input it
+reads, are set out in the working note and in SOURCES.md, so the arithmetic here
+can be checked against them rather than trusted. CC BY 4.0.
 """
 import argparse
 import csv
@@ -169,6 +181,12 @@ def main(argv=None):
     # index on FY2025 inputs from the operator's own report and reports the change. Only
     # rows carrying W_d_2025_ML_d participate. Rows tagged planning_not_measured are
     # excluded from the measured range in both years.
+    #
+    # A measured row with no FY2025 figure is held at its FY2024 value in the FY2025
+    # range rather than dropped, so both ranges cover the same set of sites. Only the
+    # six Google rows are actually re-based; xAI Memphis has no FY2025 disclosure and
+    # is carried forward. The count of re-based rows is printed below so the FY2025
+    # range is not read as seven fresh values.
     moved, meas_24, meas_25 = [], [], []
     for row in rows:
         K, PF = num(row, "K_ML_d"), num(row, "PF")
@@ -192,7 +210,9 @@ def main(argv=None):
                   % (row.get("operator"), row.get("location"), a, b, d * 100))
         print("  measured set, %d rows (planning rows excluded from both years):" % len(meas_24))
         print("    FY2024 range %.3f - %.3f" % (min(meas_24), max(meas_24)))
-        print("    FY2025 range %.3f - %.3f" % (min(meas_25), max(meas_25)))
+        print("    FY2025 range %.3f - %.3f  (%d of %d rows re-based on FY2025 reports; "
+              "the rest are held at FY2024)"
+              % (min(meas_25), max(meas_25), len(moved), len(meas_24)))
         print("  -> the index is recomputed on the operator's own later report, not on a "
               "revised estimate; movement is measured, the level is not re-litigated.")
 
