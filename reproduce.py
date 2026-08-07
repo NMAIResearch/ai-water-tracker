@@ -164,6 +164,38 @@ def main(argv=None):
     print("Reproduced within %.0f%%: %d/%d rows"
           % (args.tol * 100, len(computed) - len(flagged), len(computed)))
 
+    # Layer 1b: vintage movement. Layer 1 above reproduces Ren et al. against the FY2024
+    # inputs they used, and stays on FY2024 for that reason. This layer recomputes the same
+    # index on FY2025 inputs from the operator's own report and reports the change. Only
+    # rows carrying W_d_2025_ML_d participate. Rows tagged planning_not_measured are
+    # excluded from the measured range in both years.
+    moved, meas_24, meas_25 = [], [], []
+    for row in rows:
+        K, PF = num(row, "K_ML_d"), num(row, "PF")
+        w24, r24 = num(row, "W_d_ML_d"), num(row, "r")
+        c24 = wci(w24, K, r24, PF)
+        planning = (row.get("motive_tier") or "").strip().lower().startswith("planning")
+        w25, r25 = num(row, "W_d_2025_ML_d"), num(row, "r_2025")
+        c25 = wci(w25, K, r25, PF) if w25 and r25 else None
+        if c24 is not None and not planning:
+            meas_24.append(c24)
+            meas_25.append(c25 if c25 is not None else c24)
+        if c25 is not None and c24:
+            moved.append((row, c24, c25, c25 / c24 - 1))
+
+    if moved:
+        print("\nLAYER 1b - VINTAGE MOVEMENT (FY2024 -> FY2025, operator reports; K and PF "
+              "held constant, so the change is withdrawal and consumptive ratio only):")
+        print("  %-9s %-18s %8s %8s %8s" % ("operator", "location", "WCI'24", "WCI'25", "change"))
+        for row, a, b, d in moved:
+            print("  %-9s %-18s %8.3f %8.3f %+7.1f%%"
+                  % (row.get("operator"), row.get("location"), a, b, d * 100))
+        print("  measured set, %d rows (planning rows excluded from both years):" % len(meas_24))
+        print("    FY2024 range %.3f - %.3f" % (min(meas_24), max(meas_24)))
+        print("    FY2025 range %.3f - %.3f" % (min(meas_25), max(meas_25)))
+        print("  -> the index is recomputed on the operator's own later report, not on a "
+              "revised estimate; movement is measured, the level is not re-litigated.")
+
     if flagged:
         print("\nFLAGGED (recomputed WCI disagrees with cited value -> verify "
               "against a PRIMARY source before trusting):")

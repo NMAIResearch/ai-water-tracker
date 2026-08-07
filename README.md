@@ -29,8 +29,6 @@ reproduction check, so it drops straight into CI.
   flags mismatches, marks reservoir-coupled sites, and prints the off-site
   relocation ledger. No dependencies.
 - `SOURCES.md` — motive-tiered source ledger + the current verify targets.
-- `powerbi/` — a small SQL analysis layer over the site data (DuckDB, `run_queries.py`), the
-  shaping half of a BI project whose Power BI presentation layer is built on the same table.
 
 ## Status (2026-07-11, v0 build)
 - Layer 1 (WCI reproduced + opened): **working.** 10 Ren seed sites load; 8/10
@@ -75,12 +73,30 @@ reproduction check, so it drops straight into CI.
   never a $/household forecast.
 
 ## COI
-Anthropic (this author's maker) contracts for AI data centres, so it is non-
+Anthropic contracts for AI data centres, so it is non-
 neutral on the buildout. All operators are scored the same way. Reproducibility
 gives *calculation* transparency; it does not by itself remove seed-selection or
 imputation bias, so two guards: the 10 seed sites are **Ren's Table 6, inherited
 from the framework paper, not author-chosen**, and every estimate (WUE, EWIF band,
 planning-vs-measured tags) is named and motive-tagged in `SOURCES.md`.
+
+Guarantee: every anchor claim is traced to the primary document named in the
+Verification note, reproduce.py regenerates every table from sites.csv. A
+reader can check this without trusting either party.
+
+What the author cannot guarantee: text drafted by a language model can carry
+errors that are locally plausible, consistent in tone with the surrounding
+prose, and therefore survive review. Several methods have been deployed to
+mitigate this, including explicit instructions, internal red-teaming and
+cross-lab blindspot checks, but the author does not claim the review is
+exhaustive. Corrections are logged against the DOI when surfaced.
+
+No warranty is offered beyond the terms of the CC BY 4.0 licence. Independent
+analysis and open-science documentation only, not investment advice.
+
+The research question, method, sourcing decisions and analytical judgements are
+the author's. The assisting model is not always a neutral party to the subject
+matter.
 
 ## Citation
 NM AI Research (2026). *AI Data-Centre Water Tracker: an open, reproducible referee
