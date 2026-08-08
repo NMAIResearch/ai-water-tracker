@@ -1,5 +1,8 @@
 # Sources: AI Data-Centre Water Tracker
 
+*AI disclosure: parts of this text were artificially generated with AI assistance
+(Anthropic Opus 4.8-5.0) and reviewed by the author. Full note at the end.*
+
 Every input in `sites.csv` is named here and tagged by the standing of its source, so a
 reader can change an input, re-run `reproduce.py`, and see the index move. The point is
 open recomputation rather than author trust.
@@ -94,7 +97,7 @@ EWIF is anchored on Siddik, Shehabi and Marston (2021), Environmental Research L
 064017, doi:10.1088/1748-9326/abfba1: a US mean of about 5.1 L/kWh including hydropower
 reservoir evaporation, with a range from 0 to roughly 85 L/kWh by region.
 
-**The direction is robust and the band is not.** Evaporative sites relocate roughly 35 to 91
+**The direction holds and the band does not.** Evaporative sites relocate roughly 35 to 91
 per cent off-site and closed-loop sites roughly 92 to 95 per cent, rounded from a computed
 91.5 to 94.7. Raising the closed-loop WUE from 0.2 to 0.3 L/kWh gives 88 to 92 per cent, and
 taking the low EWIF from 1.8 to 1.0 gives 86 per cent. What survives every perturbation is
@@ -152,6 +155,9 @@ estimates rather than site measurements, and are tagged as such in `sites.csv`.
 
 ## Version history
 
+- **v0.4 (8 August 2026).** Disclosure only. No figure, table, finding or input changed. The
+  AI-assistance disclosure moves to the front of this ledger and uses the wording of the EU
+  AI Act Article 50(4) transparency duty.
 - **v0.3 (7 August 2026).** No figure, table or finding changed. This ledger was rebuilt as a
   per-row source table; the round-by-round working trail behind it is kept separately and is
   available on request. The claim that the Layer 3 finding is robust to the exact numbers was
@@ -165,7 +171,9 @@ estimates rather than site measurements, and are tagged as such in `sites.csv`.
 
 The research question, method, sourcing decisions and analytical judgements are
 the author's. Anthropic Opus 4.8-5.0 assisted with data retrieval, calculation,
-literature search and drafting. The assisting model is not always a neutral party
+literature search and drafting, so parts of this text were artificially generated
+and were reviewed by the author before publication. The assisting model is not
+always a neutral party
 to the subject matter: Anthropic contracts for AI data centres, so this work is
 non-neutral on the buildout. All operators are scored the same way.
 

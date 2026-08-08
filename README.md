@@ -5,6 +5,9 @@
 ![Python 3](https://img.shields.io/badge/python-3-blue.svg)
 ![No dependencies](https://img.shields.io/badge/dependencies-none%20(stdlib)-brightgreen.svg)
 
+*AI disclosure: parts of this text were artificially generated with AI assistance
+(Anthropic Opus 4.8-5.0) and reviewed by the author. Full note at the end.*
+
 An open, reproducible referee for data-centre water burden: the open-artifact
 version of the Ren et al. Water Consumption Impact index (WCI), extended with the
 two couplings that framework leaves open. Bands and decompositions, not single
@@ -26,8 +29,8 @@ cleared.
     python3 reproduce.py --tol 0.03 # tighter reproduction tolerance
 
 ## Files
-- The working note (paper), v0.3, 7 August 2026. On Zenodo as
-  `AI_Water_Tracker_2026-08-07.pdf`, in this repository as the matching `.md`.
+- The working note (paper), v0.4, 8 August 2026. On Zenodo as
+  `AI_Water_Tracker_2026-08-08.pdf`, in this repository as the matching `.md`.
   [DOI 10.5281/zenodo.21318960](https://doi.org/10.5281/zenodo.21318960).
 - `sites.csv`: per-site inputs (operator, location, W, r, PF, K, grid, reservoir,
   dam, cooling, WUE, EWIF band), FY2024 and FY2025.
@@ -38,7 +41,7 @@ cleared.
   that are estimates rather than site measurements, the Layer 2 and Layer 3 sources,
   the tier scheme carried in `sites.csv`, and the known limits.
 
-## Status (2026-08-07, v0.3)
+## Status (2026-08-08, v0.4)
 - Layer 1 (WCI reproduced + opened): working. 10 Ren seed sites load; 8/10
   reproduce within 5%. Flagged: Microsoft/Wisconsin (22% off) and Google/Mayes
   (6%, rounding) see SOURCES.md.
@@ -78,7 +81,7 @@ cleared.
   Finding: evaporative sites relocate ~35-91% of the footprint off-site;
   closed-loop sites relocate ~92-95%, rounded from a computed 91.5-94.7.
   "Closed-loop = near-zero water" MOVES the water to the grid, it does not
-  remove it. The direction is robust and the band is not: raising the
+  remove it. The direction holds and the band does not: raising the
   closed-loop WUE from 0.2 to 0.3 L/kWh gives 88-92%, and even at five times
   the assumed WUE the off-site share is still 68-78%. Bands + mechanism,
   never a metered per-site litre count.
@@ -118,7 +121,9 @@ planning-vs-measured tags) is named in `SOURCES.md` and tagged in `sites.csv`.
 
 The research question, method, sourcing decisions and analytical judgements are
 the author's. Anthropic Opus 4.8-5.0 assisted with data retrieval, calculation,
-literature search and drafting. The assisting model is not always a neutral party
+literature search and drafting, so parts of this text were artificially generated
+and were reviewed by the author before publication. The assisting model is not
+always a neutral party
 to the subject matter.
 
 Guarantee: every measured claim is traced to the primary document named in the
