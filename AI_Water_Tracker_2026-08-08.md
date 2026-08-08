@@ -1,9 +1,9 @@
 # AI Data-Centre Water Tracker: an open, reproducible referee for data-centre water burden
 
-**NM AI Research** (ORCID 0009-0003-4213-7769) · 8 August 2026 · v0.4 working note
+**NM AI Research** (ORCID 0009-0003-4213-7769) · 8 August 2026 · v0.5 working note
 Repository: `sites.csv` + `reproduce.py` + `SOURCES.md` (stdlib Python, no dependencies) · CC BY 4.0
 
-*AI disclosure: parts of this text were artificially generated with AI assistance (Anthropic Opus 4.8-5.0) and reviewed by the author. Full note at the end.*
+*AI disclosure: parts of this text were artificially generated with AI assistance and reviewed by the author. The models, and the conflicts they create, are named in the Conflict of interest and scope section.*
 
 ## Summary
 
@@ -139,11 +139,20 @@ Everything in the last four rows is established by reporting, contract documents
 
 The research question, method, sourcing decisions and analytical judgements are
 the author's. Anthropic Opus 4.8-5.0 assisted with data retrieval, calculation,
-literature search and drafting, so parts of this text were artificially generated
-and were reviewed by the author before publication. The assisting model is not
-always a neutral party to the subject matter: Anthropic contracts for AI data
-centres, so this work is non-neutral on the buildout. All operators are scored the
-same way.
+literature search and drafting across v0 through v0.4. OpenAI GPT-5.6 Sol
+assisted with the v0.5 disclosure and bundle revision. Parts of this text were
+artificially generated and were reviewed by the author before publication. Each
+assisting model is not always a neutral party to the subject matter.
+
+Anthropic states that it signed an agreement to use all of the compute capacity at
+SpaceX's Colossus 1 data centre (Anthropic, *"Higher usage limits for Claude and a
+compute deal with SpaceX"*, 6 May 2026,
+[anthropic.com/news/higher-limits-spacex](https://www.anthropic.com/news/higher-limits-spacex)).
+OpenAI and Oracle state that they entered an agreement to develop an additional
+4.5 GW of Stargate data-centre capacity in the United States (OpenAI, *"Stargate
+advances with 4.5 GW partnership with Oracle"*, 22 July 2025,
+[openai.com/index/stargate-advances-with-partnership-with-oracle](https://openai.com/index/stargate-advances-with-partnership-with-oracle/)). The author therefore treats neither lab as neutral on the
+buildout. All operators are scored the same way.
 
 Guarantee: every measured claim is traced to the primary document named in the
 Verification note, and reproduce.py regenerates both tables from sites.csv.
@@ -170,6 +179,7 @@ Primary and public throughout. Operator environmental reports (Google 2025 Envir
 
 *Corrections are logged rather than silently applied; no finding has been reversed. The full trail is in `SOURCES.md`.*
 
+- **v0.5 (8 August 2026).** Disclosure and presentation only. The first-exposure wording points to the conflict-of-interest section without naming a vendor. The full disclosure names both assisting labs and links each infrastructure interest to the lab's own announcement. `reproduce.py` names both assisting labs. No figure, table, finding, input or code behaviour changed.
 - **v0.4 (8 August 2026).** No figure, table, finding or input changed. The AI-assistance disclosure moves to the front of the note, the repository README and the source ledger, and states that parts of the text were artificially generated, which is the wording the EU AI Act Article 50(4) transparency duty uses. The full note at the end is unchanged in substance. One wording change in Layer 3: the sensitivity result is now stated directly rather than summarised in a single adjective.
 - **v0.3 (7 August 2026).** Bundle alignment. No figure, table or finding changed. The README was rebuilt against this note, the evidence standing of every row is now stated once in a single table, and the Layer 3 band is reported with its sensitivity rather than as a result that holds regardless of its inputs.
 - **v0.2 (7 August 2026).** Added Layer 1b, the FY2025 re-base with capacity and peaking held constant. Re-tagged Microsoft Wisconsin as planning rather than measured, taking the planning rows to three across three operators.

@@ -44,12 +44,14 @@ two of Ren et al.'s ten rows do not reproduce within tolerance (Mayes at 6 per
 cent, Wisconsin at 22 per cent). The flags are part of the finding, not a fault
 to be cleared.
 
-Disclosure: this script was written with the assistance of Anthropic Opus
-4.8-5.0. A language model's output can be wrong in ways that survive review; in
-code it simply runs, and a wrong constant or a mis-set filter still returns a
-clean number. The method it implements, and the sourcing of every input it
-reads, are set out in the working note and in SOURCES.md, so the arithmetic here
-can be checked against them rather than trusted. CC BY 4.0.
+AI disclosure: parts of this script were artificially generated with AI
+assistance from Anthropic Opus 4.8-5.0. OpenAI GPT-5.6 Sol assisted with the
+v0.5 disclosure revision. The script was reviewed by the author. A language
+model's output can be wrong in ways that survive review; in code it simply runs,
+and a wrong constant or a mis-set filter still returns a clean number. The method
+it implements, and the sourcing of every input it reads, are set out in the
+working note and in SOURCES.md, so the arithmetic here can be checked against
+them rather than trusted. CC BY 4.0.
 """
 import argparse
 import csv

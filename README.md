@@ -6,7 +6,8 @@
 ![No dependencies](https://img.shields.io/badge/dependencies-none%20(stdlib)-brightgreen.svg)
 
 *AI disclosure: parts of this text were artificially generated with AI assistance
-(Anthropic Opus 4.8-5.0) and reviewed by the author. Full note at the end.*
+and reviewed by the author. The models, and the conflicts they create, are named
+in the Conflict of interest and scope section.*
 
 An open, reproducible referee for data-centre water burden: the open-artifact
 version of the Ren et al. Water Consumption Impact index (WCI), extended with the
@@ -29,7 +30,7 @@ cleared.
     python3 reproduce.py --tol 0.03 # tighter reproduction tolerance
 
 ## Files
-- The working note (paper), v0.4, 8 August 2026. On Zenodo as
+- The working note (paper), v0.5, 8 August 2026. On Zenodo as
   `AI_Water_Tracker_2026-08-08.pdf`, in this repository as the matching `.md`.
   [DOI 10.5281/zenodo.21318960](https://doi.org/10.5281/zenodo.21318960).
 - `sites.csv`: per-site inputs (operator, location, W, r, PF, K, grid, reservoir,
@@ -41,7 +42,7 @@ cleared.
   that are estimates rather than site measurements, the Layer 2 and Layer 3 sources,
   the tier scheme carried in `sites.csv`, and the known limits.
 
-## Status (2026-08-08, v0.4)
+## Status (2026-08-08, v0.5)
 - Layer 1 (WCI reproduced + opened): working. 10 Ren seed sites load; 8/10
   reproduce within 5%. Flagged: Microsoft/Wisconsin (22% off) and Google/Mayes
   (6%, rounding) see SOURCES.md.
@@ -111,20 +112,28 @@ cleared.
 - The hydropower coupling is a flagged mechanism + directional price transmission,
   never a $/household forecast.
 
-## COI
-Anthropic contracts for AI data centres, so it is non-
-neutral on the buildout. All operators are scored the same way. Reproducibility
-gives *calculation* transparency; it does not by itself remove seed-selection or
-imputation bias, so two guards: the 10 seed sites are Ren's Table 6, inherited
-from the framework paper, not author-chosen, and every estimate (WUE, EWIF band,
-planning-vs-measured tags) is named in `SOURCES.md` and tagged in `sites.csv`.
+## Conflict of interest and scope
 
 The research question, method, sourcing decisions and analytical judgements are
 the author's. Anthropic Opus 4.8-5.0 assisted with data retrieval, calculation,
-literature search and drafting, so parts of this text were artificially generated
-and were reviewed by the author before publication. The assisting model is not
-always a neutral party
-to the subject matter.
+literature search and drafting across v0 through v0.4. OpenAI GPT-5.6 Sol
+assisted with the v0.5 disclosure and bundle revision. Parts of this text were
+artificially generated and were reviewed by the author before publication. Each
+assisting model is not always a neutral party to the subject matter.
+
+Anthropic states that it signed an agreement to use all of the compute capacity at
+SpaceX's Colossus 1 data centre (Anthropic, *"Higher usage limits for Claude and a
+compute deal with SpaceX"*, 6 May 2026,
+[anthropic.com/news/higher-limits-spacex](https://www.anthropic.com/news/higher-limits-spacex)).
+OpenAI and Oracle state that they entered an agreement to develop an additional
+4.5 GW of Stargate data-centre capacity in the United States (OpenAI, *"Stargate
+advances with 4.5 GW partnership with Oracle"*, 22 July 2025,
+[openai.com/index/stargate-advances-with-partnership-with-oracle](https://openai.com/index/stargate-advances-with-partnership-with-oracle/)). The author therefore treats neither lab as neutral on the
+buildout. All operators are scored the same way. Reproducibility gives
+*calculation* transparency; it does not by itself remove seed-selection or
+imputation bias, so two guards: the 10 seed sites are Ren's Table 6, inherited
+from the framework paper, not author-chosen, and every estimate (WUE, EWIF band,
+planning-vs-measured tags) is named in `SOURCES.md` and tagged in `sites.csv`.
 
 Guarantee: every measured claim is traced to the primary document named in the
 Verification note, and reproduce.py regenerates both tables from sites.csv.

@@ -1,7 +1,8 @@
 # Sources: AI Data-Centre Water Tracker
 
 *AI disclosure: parts of this text were artificially generated with AI assistance
-(Anthropic Opus 4.8-5.0) and reviewed by the author. Full note at the end.*
+and reviewed by the author. The models, and the conflicts they create, are named
+in the Conflict of interest and scope section.*
 
 Every input in `sites.csv` is named here and tagged by the standing of its source, so a
 reader can change an input, re-run `reproduce.py`, and see the index move. The point is
@@ -155,6 +156,11 @@ estimates rather than site measurements, and are tagged as such in `sites.csv`.
 
 ## Version history
 
+- **v0.5 (8 August 2026).** Disclosure and presentation only. The first-exposure
+  wording points to the conflict-of-interest section without naming a vendor. The
+  full disclosure names both assisting labs and links each infrastructure interest
+  to the lab's own announcement. `reproduce.py` names both assisting labs. No
+  figure, table, finding, input or code behaviour changed.
 - **v0.4 (8 August 2026).** Disclosure only. No figure, table, finding or input changed. The
   AI-assistance disclosure moves to the front of this ledger and uses the wording of the EU
   AI Act Article 50(4) transparency duty.
@@ -171,11 +177,20 @@ estimates rather than site measurements, and are tagged as such in `sites.csv`.
 
 The research question, method, sourcing decisions and analytical judgements are
 the author's. Anthropic Opus 4.8-5.0 assisted with data retrieval, calculation,
-literature search and drafting, so parts of this text were artificially generated
-and were reviewed by the author before publication. The assisting model is not
-always a neutral party
-to the subject matter: Anthropic contracts for AI data centres, so this work is
-non-neutral on the buildout. All operators are scored the same way.
+literature search and drafting across v0 through v0.4. OpenAI GPT-5.6 Sol
+assisted with the v0.5 disclosure and bundle revision. Parts of this text were
+artificially generated and were reviewed by the author before publication. Each
+assisting model is not always a neutral party to the subject matter.
+
+Anthropic states that it signed an agreement to use all of the compute capacity at
+SpaceX's Colossus 1 data centre (Anthropic, *"Higher usage limits for Claude and a
+compute deal with SpaceX"*, 6 May 2026,
+[anthropic.com/news/higher-limits-spacex](https://www.anthropic.com/news/higher-limits-spacex)).
+OpenAI and Oracle state that they entered an agreement to develop an additional
+4.5 GW of Stargate data-centre capacity in the United States (OpenAI, *"Stargate
+advances with 4.5 GW partnership with Oracle"*, 22 July 2025,
+[openai.com/index/stargate-advances-with-partnership-with-oracle](https://openai.com/index/stargate-advances-with-partnership-with-oracle/)). The author therefore treats neither lab as neutral on the
+buildout. All operators are scored the same way.
 
 Guarantee: every measured claim is traced to the primary document named in the
 Verification note, and reproduce.py regenerates both tables from sites.csv.
