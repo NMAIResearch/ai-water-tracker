@@ -1,0 +1,3 @@
+operator,location,W_d_ML_d,r,PF,K_ML_d,stated_WCI,grid_region,reservoir,dam,double_coupled_candidate,source_tag,motive_tier,cooling,WUE_L_per_kWh,EWIF_lo,EWIF_hi,W_d_2025_ML_d,r_2025,vintage_note,range_flag
+ExampleCo,"River Site, ZZ",10,0.5,2,20,0.50,Example-Grid,River,Example-Dam,Y_primary,fixture_primary,primary,evaporative,2.0,1.0,2.0,12,0.6,"Synthetic FY2025 fixture",
+PlanCo,"Future Site, ZZ",4,0.75,3,24,0.38,Example-Grid,,,,fixture_plan,planning_not_measured,closed_loop,0.2,1.0,2.0,,,,

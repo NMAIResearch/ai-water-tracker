@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Interactive evidence explorer for the AI Data-Centre Water Tracker.">
+<title>AI Data-Centre Water Evidence Explorer</title>
+<style>
+  :root {
+    --navy: #1a365d;
+    --blue: #2b6cb0;
+    --cyan: #0e7490;
+    --slate: #4a5568;
+    --body: #2d3748;
+    --muted: #718096;
+    --line: #dfe6ee;
+    --alt: #f7fafc;
+    --panel: #fbfdff;
+    --white: #ffffff;
+    --good: #276749;
+    --good-bg: #f0fff4;
+    --warn: #975a16;
+    --warn-bg: #fffaf0;
+    --bad: #9b2c2c;
+    --bad-bg: #fff5f5;
+    --unknown: #5f6b7a;
+    --unknown-bg: #edf2f7;
+    --reclaimed: #2c7a7b;
+    --potable: #2b6cb0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--white);
+    color: var(--body);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.48;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--blue); }
+  button, input, select { font: inherit; }
+  button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+    outline: 3px solid rgba(43, 108, 176, .28);
+    outline-offset: 2px;
+  }
+  .wrap { max-width: 1220px; margin: 0 auto; padding: 28px 22px 64px; }
+  .portfolio-link { margin: 0 0 12px; font-size: 13px; }
+  .portfolio-link a { text-decoration: none; }
+  h1 { margin: 0 0 6px; color: var(--navy); font-size: clamp(26px, 4vw, 38px); line-height: 1.15; }
+  h2 { margin: 0 0 12px; color: var(--navy); font-size: 20px; }
+  h3 { margin: 0 0 8px; color: var(--navy); font-size: 16px; }
+  .lede { max-width: 900px; margin: 0; color: var(--slate); font-size: 15px; }
+  .stamp { margin: 10px 0 0; color: var(--muted); font-size: 12.5px; }
+  .notice {
+    margin: 22px 0 18px;
+    padding: 14px 16px;
+    background: #f0f7ff;
+    border: 1px solid #cbdff5;
+    border-left: 5px solid var(--blue);
+    border-radius: 7px;
+    font-size: 14px;
+  }
+  .notice strong { color: var(--navy); }
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(145px, 1fr));
+    gap: 14px;
+    align-items: end;
+    padding: 17px;
+    background: var(--alt);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+  }
+  .control label, .control .control-label {
+    display: block;
+    margin: 0 0 6px;
+    color: var(--slate);
+    font-size: 11.5px;
+    font-weight: bold;
+    letter-spacing: .045em;
+    text-transform: uppercase;
+  }
+  .control input, .control select {
+    width: 100%;
+    min-height: 38px;
+    padding: 8px 10px;
+    color: var(--body);
+    background: var(--white);
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+  }
+  .segment { display: inline-flex; width: 100%; overflow: hidden; border: 1px solid var(--navy); border-radius: 6px; }
+  .segment button {
+    flex: 1;
+    min-height: 36px;
+    padding: 7px 10px;
+    border: 0;
+    color: var(--navy);
+    background: var(--white);
+    cursor: pointer;
+  }
+  .segment button + button { border-left: 1px solid var(--navy); }
+  .segment button.active { color: var(--white); background: var(--navy); font-weight: bold; }
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .kpi { padding: 15px 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--white); }
+  .kpi-label { display: block; color: var(--muted); font-size: 11.5px; font-weight: bold; letter-spacing: .04em; text-transform: uppercase; }
+  .kpi-value { display: block; margin-top: 2px; color: var(--navy); font-size: 25px; font-weight: bold; font-variant-numeric: tabular-nums; }
+  .kpi-note { display: block; margin-top: 2px; color: var(--slate); font-size: 12px; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(290px, .8fr); gap: 18px; align-items: start; }
+  .panel { border: 1px solid var(--line); border-radius: 9px; background: var(--white); overflow: hidden; }
+  .panel-head { padding: 15px 17px 12px; border-bottom: 1px solid var(--line); }
+  .panel-head p { margin: 0; color: var(--slate); font-size: 13px; }
+  .bars { padding: 8px 17px 17px; }
+  .bar-row { display: grid; grid-template-columns: minmax(155px, 220px) minmax(140px, 1fr) 100px; gap: 10px; align-items: center; padding: 7px 0; }
+  .bar-label { min-width: 0; }
+  .bar-label button { padding: 0; border: 0; background: none; color: var(--navy); text-align: left; cursor: pointer; font-weight: bold; }
+  .bar-label small { display: block; overflow: hidden; color: var(--muted); text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track { height: 16px; overflow: hidden; background: #edf2f7; border-radius: 4px; }
+  .bar-fill { height: 100%; min-width: 2px; border-radius: 4px; background: var(--blue); }
+  .bar-fill.planning { background: #c05621; }
+  .bar-fill.secondary { background: #6b46c1; }
+  .bar-value { text-align: right; color: var(--body); font-size: 13px; font-weight: bold; font-variant-numeric: tabular-nums; }
+  .empty { padding: 24px 0; color: var(--muted); text-align: center; }
+  .detail { padding: 17px; }
+  .detail-placeholder { margin: 0; color: var(--slate); }
+  .detail dl { display: grid; grid-template-columns: 118px 1fr; gap: 7px 10px; margin: 14px 0 0; font-size: 13px; }
+  .detail dt { color: var(--muted); font-weight: bold; }
+  .detail dd { margin: 0; }
+  .detail-note { margin: 14px 0 0; padding: 11px 12px; background: var(--alt); border-radius: 6px; font-size: 13px; }
+  .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11.5px; font-weight: bold; white-space: nowrap; }
+  .badge.primary { color: var(--good); background: var(--good-bg); }
+  .badge.planning_not_measured { color: var(--bad); background: var(--bad-bg); }
+  .badge.framework_secondary { color: var(--warn); background: var(--warn-bg); }
+  .badge.not_reported { color: var(--unknown); background: var(--unknown-bg); }
+  .source-chip { display: inline-block; margin-top: 4px; color: var(--slate); font-size: 12px; }
+  .section { margin-top: 24px; }
+  .split-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .75fr); gap: 22px; padding: 18px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); }
+  .split-card p { margin: 0 0 10px; font-size: 14px; }
+  .split-chart { align-self: centre; }
+  .split-row { margin: 0 0 14px; }
+  .split-row:last-child { margin-bottom: 0; }
+  .split-label { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 5px; font-size: 12.5px; font-weight: bold; }
+  .split-track { display: flex; height: 22px; overflow: hidden; background: var(--unknown-bg); border-radius: 5px; }
+  .split-reclaimed { background: var(--reclaimed); }
+  .split-potable { background: var(--potable); min-width: 2px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 10px; color: var(--slate); font-size: 12px; }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 2px; }
+  .legend .reclaimed::before { background: var(--reclaimed); }
+  .legend .potable::before { background: var(--potable); }
+  .table-wrap { margin-top: 18px; overflow-x: auto; border: 1px solid var(--line); border-radius: 9px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { padding: 10px; color: var(--white); background: var(--navy); text-align: left; white-space: nowrap; }
+  thead th.num { text-align: right; }
+  tbody td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:nth-child(even) { background: var(--alt); }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .site-button { padding: 0; border: 0; color: var(--navy); background: none; cursor: pointer; text-align: left; font-weight: bold; }
+  .site-button:hover { text-decoration: underline; }
+  .count { margin: 10px 2px 0; color: var(--muted); font-size: 12.5px; }
+  details.guardrails { margin-top: 24px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--alt); }
+  details.guardrails summary { color: var(--navy); cursor: pointer; font-weight: bold; }
+  details.guardrails p, details.guardrails li { font-size: 13px; }
+  .foot { margin-top: 26px; padding-top: 17px; border-top: 1px solid var(--line); color: var(--slate); font-size: 12.5px; }
+  .foot p { margin: 0 0 9px; }
+  .noscript { margin: 18px 0; padding: 14px; color: var(--bad); background: var(--bad-bg); border-radius: 6px; }
+  @media (max-width: 900px) {
+    .controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .controls .search { grid-column: 1 / -1; }
+    .grid, .split-card { grid-template-columns: 1fr; }
+    .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 600px) {
+    .wrap { padding: 20px 14px 46px; }
+    .controls { grid-template-columns: 1fr; }
+    .controls .search { grid-column: auto; }
+    .bar-row { grid-template-columns: minmax(110px, 1fr) 70px; }
+    .bar-track { grid-column: 1 / -1; grid-row: 2; }
+    .bar-value { grid-column: 2; grid-row: 1; }
+    .kpis { grid-template-columns: 1fr 1fr; }
+    .detail dl { grid-template-columns: 1fr; gap: 2px; }
+    .detail dd { margin-bottom: 7px; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p class="portfolio-link"><a href="https://nmairesearch.github.io/">&larr; NM AI Research portfolio</a></p>
+  <h1>AI Data-Centre Water Evidence Explorer</h1>
+  <p class="lede">Compare water withdrawal, estimated consumption, Water Consumption Impact and modelled off-site water across the tracker's ten-site seed. Every planning figure and unknown source remains visible as such.</p>
+  <p class="stamp">Interactive front end over the frozen v0.5 dataset, published 8 August 2026. Water-source overlay checked 11 August 2026. <a href="https://doi.org/10.5281/zenodo.21318960" target="_blank" rel="noopener noreferrer">DOI 10.5281/zenodo.21318960</a>. CC BY 4.0.</p>
+
+  <div class="notice"><strong>Interactive, not live metering.</strong> The source reports are periodic and non-standardised. The WCI uses total withdrawal regardless of source. Potable, reclaimed, surface-water and groundwater labels appear only where the source ledger supports them; all other rows remain unknown.</div>
+
+  <section class="controls" aria-label="Explorer controls">
+    <div class="control">
+      <span class="control-label" id="year-label">Reporting year</span>
+      <div class="segment" role="group" aria-labelledby="year-label">
+        <button type="button" class="active" data-year="fy2024" aria-pressed="true">FY2024</button>
+        <button type="button" data-year="fy2025" aria-pressed="false">FY2025</button>
+      </div>
+    </div>
+    <div class="control">
+      <label for="metric">Metric</label>
+      <select id="metric">
+        <option value="wci">Water Consumption Impact</option>
+        <option value="withdrawal">Average withdrawal</option>
+        <option value="consumed">Estimated average consumption</option>
+        <option value="offsite">Modelled off-site share</option>
+      </select>
+    </div>
+    <div class="control">
+      <label for="status">Evidence status</label>
+      <select id="status">
+        <option value="evidence">Exclude planning figures</option>
+        <option value="all">All ten seed rows</option>
+        <option value="primary">Primary verified only</option>
+        <option value="framework_secondary">Framework secondary only</option>
+        <option value="planning_not_measured">Planning only</option>
+      </select>
+    </div>
+    <div class="control">
+      <label for="source">Water source</label>
+      <select id="source">
+        <option value="all">All source labels</option>
+        <option value="documented">Documented source only</option>
+        <option value="reclaimed_potable">Reclaimed + potable</option>
+        <option value="surface_water">Surface water</option>
+        <option value="aquifer_municipal">Aquifer + municipal potable</option>
+        <option value="unknown">Unknown</option>
+      </select>
+    </div>
+    <div class="control search">
+      <label for="search">Find operator or place</label>
+      <input id="search" type="search" placeholder="Google, Nevada..." autocomplete="off">
+    </div>
+  </section>
+
+  <section class="kpis" aria-label="Current selection summary">
+    <div class="kpi"><span class="kpi-label">Seed denominator</span><span class="kpi-value" id="kpi-seed">10</span><span class="kpi-note">Fixed rows from the framework</span></div>
+    <div class="kpi"><span class="kpi-label">Rows displayed</span><span class="kpi-value" id="kpi-visible">0</span><span class="kpi-note" id="kpi-visible-note">After filters</span></div>
+    <div class="kpi"><span class="kpi-label">Metric available</span><span class="kpi-value" id="kpi-available">0</span><span class="kpi-note" id="kpi-available-note">For selected year</span></div>
+    <div class="kpi"><span class="kpi-label">Source documented</span><span class="kpi-value" id="kpi-sources">0</span><span class="kpi-note">Within displayed rows</span></div>
+  </section>
+
+  <section class="grid">
+    <div class="panel">
+      <div class="panel-head">
+        <h2 id="chart-title">Water Consumption Impact</h2>
+        <p id="chart-note">Dimensionless peak consumptive draw as a share of host utility capacity.</p>
+      </div>
+      <div class="bars" id="bars" aria-live="polite"></div>
+    </div>
+    <aside class="panel" aria-labelledby="detail-title">
+      <div class="panel-head"><h2 id="detail-title">Site evidence</h2><p>Select a site name to inspect its status and source classification.</p></div>
+      <div class="detail" id="detail" aria-live="polite"><p class="detail-placeholder">No site selected.</p></div>
+    </aside>
+  </section>
+
+  <section class="section" aria-labelledby="split-title">
+    <div class="split-card">
+      <div>
+        <h2 id="split-title">One flat total can hide a change in source</h2>
+        <p>Douglas County, Georgia is the current seed's explicit potable and reclaimed split. Total withdrawal changed little between the two reporting years, while the potable component increased and the reclaimed component declined.</p>
+        <p>This composition belongs beside WCI rather than inside it. The index measures total water burden against utility capacity; it does not grade the source.</p>
+        <p><a href="AI_Water_Tracker_2026-08-08.md" target="_blank" rel="noopener noreferrer">Read the verification note</a>.</p>
+      </div>
+      <div class="split-chart" id="split-chart" aria-label="Douglas County potable and reclaimed water by reporting year"></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="table-title">
+    <h2 id="table-title">Evidence table</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Site</th><th>Status</th><th>Water source</th><th>Cooling</th><th>Hydropower coupling</th><th class="num" id="metric-head">WCI</th></tr></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+    <p class="count" id="count" aria-live="polite"></p>
+  </section>
+
+  <details class="guardrails">
+    <summary>Method and guardrails</summary>
+    <p><strong>WCI.</strong> WCI = (average withdrawal / host utility capacity) × consumptive ratio × peaking factor. A value is a pressure index, not a volume and not a water-quality score.</p>
+    <p><strong>Consumption.</strong> Average consumption is withdrawal multiplied by the consumptive ratio. Ratios for non-Google rows are assigned framework defaults rather than site measurements.</p>
+    <p><strong>Off-site share.</strong> This is a grid-average modelled band calculated from cooling WUE and the regional electricity-water intensity band. It is not a metered per-site value.</p>
+    <p><strong>Source labels.</strong> Unknown means the current ledger does not support a classification. A reservoir in the hydropower field describes an electricity coupling and is not evidence of the site's cooling-water source.</p>
+    <p><strong>Denominator.</strong> The seed remains ten rows: six primary-verified rows, three planning rows and one framework-secondary row. Filters change the display, never the denominator.</p>
+  </details>
+
+  <footer class="foot">
+    <p><strong>Reproducibility.</strong> <code>build_tool.py</code> embeds <code>sites.csv</code> and the conservative <code>water_source_evidence.csv</code> overlay into this file. The page makes no network request after loading.</p>
+    <p><strong>Disclosure.</strong> The research question, method, source judgements and final decisions are the author's. Anthropic models assisted with earlier research and drafting. OpenAI GPT-5.6 Sol assisted with this interface. OpenAI and Anthropic are not neutral on AI data-centre buildout; the full conflict statement and sources are in the <a href="AI_Water_Tracker_2026-08-08.md">working note</a>. Independent review remains required.</p>
+    <p>NM AI Research, ORCID 0009-0003-4213-7769. Licensed CC BY 4.0.</p>
+  </footer>
+  <noscript><p class="noscript">JavaScript is required for filtering and charts. The complete source data remain available in <a href="sites.csv">sites.csv</a>.</p></noscript>
+</main>
+
+<script>
+/* DATA-START */
+const DATA = [
+  {
+    "cooling": "closed_loop",
+    "dam": "",
+    "fy2024": {
+      "consumed": 3.7037,
+      "peak_consumed": 23.33331,
+      "wci": 0.7700762376237624,
+      "withdrawal": 4.81
+    },
+    "fy2025": {
+      "consumed": null,
+      "peak_consumed": null,
+      "wci": null,
+      "withdrawal": null
+    },
+    "grid_region": "MISO-Indiana",
+    "hydro_coupled": false,
+    "location": "Lebanon, IN",
+    "offsite_share": {
+      "high": 0.9473684210526315,
+      "low": 0.9152542372881355
+    },
+    "operator": "Meta",
+    "range_flag": "",
+    "reported_wci_2024": 0.77,
+    "reservoir": "",
+    "source_tag": "ren_seed_NOT_operational_closedloop",
+    "status": "planning_not_measured",
+    "status_label": "Planning, not measured",
+    "vintage_note": "",
+    "water_source": {
+      "detail_href": "SOURCES.md",
+      "evidence_note": "No potable, reclaimed, surface-water or groundwater classification is carried for this seed row. Grid and reservoir fields are not used to infer it.",
+      "evidence_tier": "not_reported",
+      "potable_2024_Mgal": null,
+      "potable_2025_Mgal": null,
+      "reclaimed_2024_Mgal": null,
+      "reclaimed_2025_Mgal": null,
+      "source_class": "unknown",
+      "source_label": "Unknown",
+      "total_2024_Mgal": null,
+      "total_2025_Mgal": null
+    }
+  },
+  {
+    "cooling": "evaporative",
+    "dam": "",
+    "fy2024": {
+      "consumed": 10.46792,
+      "peak_consumed": 68.04147999999999,
+      "wci": 1.8590568306010926,
+      "withdrawal": 14.62
+    },
+    "fy2025": {
+      "consumed": 13.9589184,
+      "peak_consumed": 90.7329696,
+      "wci": 2.4790428852459017,
+      "withdrawal": 18.112
+    },
+    "grid_region": "MISO-Iowa",
+    "hydro_coupled": false,
+    "location": "Council Bluffs, IA",
+    "offsite_share": {
+      "high": 0.6666666666666666,
+      "low": 0.5
+    },
+    "operator": "Google",
+    "range_flag": "",
+    "reported_wci_2024": 1.86,
+    "reservoir": "",
+    "source_tag": "google_fy2024_verified",
+    "status": "primary",
+    "status_label": "Primary verified",
+    "vintage_note": "Google 2026 Env Report, FY2025: 1,746.4 M gal withdrawn / 1,346.0 consumed",
+    "water_source": {
+      "detail_href": "SOURCES.md",
+      "evidence_note": "No potable, reclaimed, surface-water or groundwater classification is carried for this seed row. Grid and reservoir fields are not used to infer it.",
+      "evidence_tier": "not_reported",
+      "potable_2024_Mgal": null,
+      "potable_2025_Mgal": null,
+      "reclaimed_2024_Mgal": null,
+      "reclaimed_2025_Mgal": null,
+      "source_class": "unknown",
+      "source_label": "Unknown",
+      "total_2024_Mgal": null,
+      "total_2025_Mgal": null
+    }
+  },
+  {
+    "cooling": "evaporative",
+    "dam": "",
+    "fy2024": {
+      "consumed": 8.64048,
+      "peak_consumed": 21.6012,
+      "wci": 0.41540769230769226,
+      "withdrawal": 11.49
+    },
+    "fy2025": {
+      "consumed": 11.2157355,
+      "peak_consumed": 28.03933875,
+      "wci": 0.5392180528846153,
+      "withdrawal": 14.485
+    },
+    "grid_region": "SPP-Oklahoma",
+    "hydro_coupled": false,
+    "location": "Mayes Co., OK",
+    "offsite_share": {
+      "high": 0.5,
+      "low": 0.34782608695652173
+    },
+    "operator": "Google",
+    "range_flag": "",
+    "reported_wci_2024": 0.44,
+    "reservoir": "",
+    "source_tag": "utility_openrecords_2024_verified",
+    "status": "primary",
+    "status_label": "Primary verified",
+    "vintage_note": "Google 2026 Env Report, FY2025: 1,396.7 / 1,081.4",
+    "water_source": {
+      "detail_href": "SOURCES.md",
+      "evidence_note": "Utility open records identify the MidAmerica Industrial Park intake on the Neosho River. No potable and reclaimed split is reported.",
+      "evidence_tier": "primary",
+      "potable_2024_Mgal": null,
+      "potable_2025_Mgal": null,
+      "reclaimed_2024_Mgal": null,
+      "reclaimed_2025_Mgal": null,
+      "source_class": "surface_water",
+      "source_label": "Surface water",
+      "total_2024_Mgal": null,
+      "total_2025_Mgal": null
+    }
+  },
+  {
+    "cooling": "evaporative",
+    "dam": "The-Dalles-Dam",
+    "fy2024": {
+      "consumed": 3.74752,
+      "peak_consumed": 8.2820192,
+      "wci": 0.1824233303964758,
+      "withdrawal": 4.78
+    },
+    "fy2025": {
+      "consumed": 4.8642047999999996,
+      "peak_consumed": 10.749892608,
+      "wci": 0.23678177550660792,
+      "withdrawal": 6.786
+    },
+    "grid_region": "Columbia-River",
+    "hydro_coupled": true,
+    "location": "The Dalles, OR",
+    "offsite_share": {
+      "high": 0.9090909090909091,
+      "low": 0.7692307692307693
+    },
+    "operator": "Google",
+    "range_flag": "",
+    "reported_wci_2024": 0.18,
+    "reservoir": "Columbia-River",
+    "source_tag": "google_fy2024_verified",
+    "status": "primary",
+    "status_label": "Primary verified",
+    "vintage_note": "Google 2026 Env Report, FY2025: 654.3 / 469.0",
+    "water_source": {
+      "detail_href": "SOURCES.md",
+      "evidence_note": "No potable, reclaimed, surface-water or groundwater classification is carried for this seed row. Grid and reservoir fields are not used to infer it.",
+      "evidence_tier": "not_reported",
+      "potable_2024_Mgal": null,
+      "potable_2025_Mgal": null,
+      "reclaimed_2024_Mgal": null,
+      "reclaimed_2025_Mgal": null,
+      "source_class": "unknown",
+      "source_label": "Unknown",
+      "total_2024_Mgal": null,
+      "total_2025_Mgal": null
+    }
+  },
+  {
+    "cooling": "evaporative",
+    "dam": "",
+    "fy2024": {
+      "consumed": 3.7995999999999994,
+      "peak_consumed": 9.498999999999999,
+      "wci": 0.41845814977973567,
+      "withdrawal": 4.6
+    },
+    "fy2025": {
+      "consumed": 3.8068908,
+      "peak_consumed": 9.517227,
+      "wci": 0.4192611013215859,
+      "withdrawal": 4.569
+    },
+    "grid_region": "Southern-Co-GA",
+    "hydro_coupled": false,
+    "location": "Douglas Co., GA",
+    "offsite_share": {
+      "high": 0.7000000000000001,
+      "low": 0.5454545454545455
+    },
+    "operator": "Google",
+    "range_flag": "",
+    "reported_wci_2024": 0.41,
+    "reservoir": "",
+    "source_tag": "google_fy2024_reclaimed_verified",
+    "status": "primary",
+    "status_label": "Primary verified",
+    "vintage_note": "Google 2026 Env Report, FY2025: 440.6 / 367.1",
+    "water_source": {
+      "detail_href": "AI_Water_Tracker_2026-08-08.md",
+      "evidence_note": "Google reports both sources. The WCI uses total withdrawal, so the source split is a separate evidence layer.",
+      "evidence_tier": "primary",
+      "potable_2024_Mgal": 7.4,
+      "potable_2025_Mgal": 46.3,
+      "reclaimed_2024_Mgal": 436.7,
+      "reclaimed_2025_Mgal": 394.3,
+      "source_class": "reclaimed_potable",
+      "source_label": "Reclaimed + potable",
+      "total_2024_Mgal": 444.1,
+      "total_2025_Mgal": 440.6
+    }
+  },
+  {
+    "cooling": "closed_loop",
+    "dam": "",
+    "fy2024": {
+      "consumed": 0.06699,
+      "peak_consumed": 2.0096999999999996,
+      "wci": 0.26443421052631577,
+      "withdrawal": 0.087
+    },
+    "fy2025": {
+      "consumed": null,
+      "peak_consumed": null,
+      "wci": null,
+      "withdrawal": null
+    },
+    "grid_region": "MISO-Wisconsin",
+    "hydro_coupled": false,
+    "location": "Wisconsin",
+    "offsite_share": {
+      "high": 0.9473684210526315,
+      "low": 0.9152542372881355
+    },
+    "operator": "Microsoft",
+    "range_flag": "",
+    "reported_wci_2024": 0.34,
+    "reservoir": "",
+    "source_tag": "ren_table6",
+    "status": "planning_not_measured",
+    "status_label": "Planning, not measured",
+    "vintage_note": "",
+    "water_source": {
+      "detail_href": "SOURCES.md",
+      "evidence_note": "No potable, reclaimed, surface-water or groundwater classification is carried for this seed row. Grid and reservoir fields are not used to infer it.",
+      "evidence_tier": "not_reported",
+      "potable_2024_Mgal": null,
+      "potable_2025_Mgal": null,
+      "reclaimed_2024_Mgal": null,
+      "reclaimed_2025_Mgal": null,
+      "source_class": "unknown",
+      "source_label": "Unknown",
+      "total_2024_Mgal": null,
+      "total_2025_Mgal": null
+    }
+  },
+  {
+    "cooling": "evaporative",
+    "dam": "",
+    "fy2024": {
+      "consumed": 5.8289,
+      "peak_consumed": 14.57225,
+      "wci": 1.4286519607843138,
+      "withdrawal": 7.57
+    },
+    "fy2025": {
+      "consumed": null,
+      "peak_consumed": null,
+      "wci": null,
+      "withdrawal": null
+    },
+    "grid_region": "PJM-Dominion-VA",
+    "hydro_coupled": false,
+    "location": "Botetourt Co., VA",
+    "offsite_share": {
+      "high": 0.6666666666666666,
+      "low": 0.5454545454545455
+    },
+    "operator": "Google",
+    "range_flag": "",
+    "reported_wci_2024": 1.45,
+    "reservoir": "",
+    "source_tag": "contracted_2MGD_NOT_operational",
+    "status": "planning_not_measured",
+    "status_label": "Planning, not measured",
+    "vintage_note": "",
+    "water_source": {
+      "detail_href": "SOURCES.md",
+      "evidence_note": "No potable, reclaimed, surface-water or groundwater classification is carried for this seed row. Grid and reservoir fields are not used to infer it.",
+      "evidence_tier": "not_reported",
+      "potable_2024_Mgal": null,
+      "potable_2025_Mgal": null,
+      "reclaimed_2024_Mgal": null,
+      "reclaimed_2025_Mgal": null,
+      "source_class": "unknown",
+      "source_label": "Unknown",
+      "total_2024_Mgal": null,
+      "total_2025_Mgal": null
+    }
+  },
+  {
+    "cooling": "evaporative",
+    "dam": "",
+    "fy2024": {
+      "consumed": 2.9183,
+      "peak_consumed": 13.132349999999999,
+      "wci": 0.5785176211453744,
+      "withdrawal": 3.79
+    },
+    "fy2025": {
+      "consumed": null,
+      "peak_consumed": null,
+      "wci": null,
+      "withdrawal": null
+    },
+    "grid_region": "TVA-Tennessee",
+    "hydro_coupled": false,
+    "location": "Memphis, TN",
+    "offsite_share": {
+      "high": 0.7000000000000001,
+      "low": 0.5714285714285714
+    },
+    "operator": "xAI",
+    "range_flag": "0.81-7.0 MGD across Colossus 1 and 2; the static row is Ren's single-site value and is indicative only",
+    "reported_wci_2024": 0.57,
+    "reservoir": "",
+    "source_tag": "ren_seed_W_in_primary_range_multisite",
+    "status": "framework_secondary",
+    "status_label": "Framework secondary",
+    "vintage_note": "",
+    "water_source": {
+      "detail_href": "SOURCES.md",
+      "evidence_note": "The reported current band includes Memphis Sand Aquifer draw and committed municipal drinking-water supply. No source-volume split is carried.",
+      "evidence_tier": "framework_secondary",
+      "potable_2024_Mgal": null,
+      "potable_2025_Mgal": null,
+      "reclaimed_2024_Mgal": null,
+      "reclaimed_2025_Mgal": null,
+      "source_class": "aquifer_municipal",
+      "source_label": "Aquifer + municipal potable",
+      "total_2024_Mgal": null,
+      "total_2025_Mgal": null
+    }
+  },
+  {
+    "cooling": "evaporative",
+    "dam": "",
+    "fy2024": {
+      "consumed": 1.8892499999999999,
+      "peak_consumed": 4.723125,
+      "wci": 0.3127897350993377,
+      "withdrawal": 2.29
+    },
+    "fy2025": {
+      "consumed": 2.2839836,
+      "peak_consumed": 5.709959,
+      "wci": 0.3781429801324503,
+      "withdrawal": 2.734
+    },
+    "grid_region": "ERCOT-Texas",
+    "hydro_coupled": false,
+    "location": "Midlothian, TX",
+    "offsite_share": {
+      "high": 0.5,
+      "low": 0.34782608695652173
+    },
+    "operator": "Google",
+    "range_flag": "",
+    "reported_wci_2024": 0.31,
+    "reservoir": "",
+    "source_tag": "google_fy2024_verified",
+    "status": "primary",
+    "status_label": "Primary verified",
+    "vintage_note": "Google 2026 Env Report, FY2025: 263.6 / 220.2",
+    "water_source": {
+      "detail_href": "SOURCES.md",
+      "evidence_note": "No potable, reclaimed, surface-water or groundwater classification is carried for this seed row. Grid and reservoir fields are not used to infer it.",
+      "evidence_tier": "not_reported",
+      "potable_2024_Mgal": null,
+      "potable_2025_Mgal": null,
+      "reclaimed_2024_Mgal": null,
+      "reclaimed_2025_Mgal": null,
+      "source_class": "unknown",
+      "source_label": "Unknown",
+      "total_2024_Mgal": null,
+      "total_2025_Mgal": null
+    }
+  },
+  {
+    "cooling": "evaporative",
+    "dam": "Hoover-Dam",
+    "fy2024": {
+      "consumed": 2.1484799999999997,
+      "peak_consumed": 5.371199999999999,
+      "wci": 0.35336842105263155,
+      "withdrawal": 3.73
+    },
+    "fy2025": {
+      "consumed": 2.482936,
+      "peak_consumed": 6.20734,
+      "wci": 0.4083776315789474,
+      "withdrawal": 4.166
+    },
+    "grid_region": "Colorado-River",
+    "hydro_coupled": true,
+    "location": "Henderson, NV",
+    "offsite_share": {
+      "high": 0.7999999999999999,
+      "low": 0.5714285714285714
+    },
+    "operator": "Google",
+    "range_flag": "",
+    "reported_wci_2024": 0.36,
+    "reservoir": "Lake-Mead",
+    "source_tag": "google_fy2024_verified_city_corroborated",
+    "status": "primary",
+    "status_label": "Primary verified",
+    "vintage_note": "Google 2026 Env Report, FY2025: 401.7 / 239.4",
+    "water_source": {
+      "detail_href": "SOURCES.md",
+      "evidence_note": "No potable, reclaimed, surface-water or groundwater classification is carried for this seed row. Grid and reservoir fields are not used to infer it.",
+      "evidence_tier": "not_reported",
+      "potable_2024_Mgal": null,
+      "potable_2025_Mgal": null,
+      "reclaimed_2024_Mgal": null,
+      "reclaimed_2025_Mgal": null,
+      "source_class": "unknown",
+      "source_label": "Unknown",
+      "total_2024_Mgal": null,
+      "total_2025_Mgal": null
+    }
+  }
+];
+/* DATA-END */
+
+const METRICS = {
+  wci: {
+    title: "Recomputed Water Consumption Impact",
+    head: "WCI (calc.)",
+    note: "Recomputed dimensionless peak consumptive draw as a share of host utility capacity.",
+    unit: "",
+    value: (row, year) => row[year].wci,
+    display: value => value === null ? "No data" : value.toFixed(2)
+  },
+  withdrawal: {
+    title: "Average water withdrawal",
+    head: "Withdrawal",
+    note: "Average daily water taken from the reported source, before accounting for returns.",
+    unit: " ML/day",
+    value: (row, year) => row[year].withdrawal,
+    display: value => value === null ? "No data" : value.toFixed(value < 0.1 ? 3 : 2) + " ML/day"
+  },
+  consumed: {
+    title: "Estimated average water consumption",
+    head: "Consumption",
+    note: "Average withdrawal multiplied by the consumptive ratio. Non-Google ratios are assigned defaults.",
+    unit: " ML/day",
+    value: (row, year) => row[year].consumed,
+    display: value => value === null ? "No data" : value.toFixed(value < 0.1 ? 3 : 2) + " ML/day"
+  },
+  offsite: {
+    title: "Modelled off-site water share",
+    head: "Off-site share",
+    note: "Grid-average band from cooling WUE and regional electricity-water intensity. Not a site meter.",
+    unit: "%",
+    value: row => {
+      const low = row.offsite_share.low;
+      const high = row.offsite_share.high;
+      return low === null || high === null ? null : ((low + high) / 2) * 100;
+    },
+    display: (value, row) => {
+      if (value === null) return "No data";
+      return Math.round(row.offsite_share.low * 100) + " to " + Math.round(row.offsite_share.high * 100) + "%";
+    }
+  }
+};
+
+const state = { year: "fy2024", metric: "wci", status: "evidence", source: "all", search: "" };
+const els = {
+  bars: document.getElementById("bars"),
+  body: document.getElementById("table-body"),
+  count: document.getElementById("count"),
+  detail: document.getElementById("detail"),
+  chartTitle: document.getElementById("chart-title"),
+  chartNote: document.getElementById("chart-note"),
+  metricHead: document.getElementById("metric-head")
+};
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"]/g, char => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;"})[char]);
+}
+
+function metricValue(row) {
+  return METRICS[state.metric].value(row, state.year);
+}
+
+function selectedRows() {
+  const query = state.search.trim().toLowerCase();
+  return DATA.filter(row => {
+    if (state.status === "evidence" && row.status === "planning_not_measured") return false;
+    if (!["all", "evidence"].includes(state.status) && row.status !== state.status) return false;
+    const sourceClass = row.water_source.source_class;
+    if (state.source === "documented" && sourceClass === "unknown") return false;
+    if (!["all", "documented"].includes(state.source) && sourceClass !== state.source) return false;
+    if (query && !(row.operator + " " + row.location).toLowerCase().includes(query)) return false;
+    return true;
+  });
+}
+
+function statusBadge(row) {
+  return '<span class="badge ' + escapeHTML(row.status) + '">' + escapeHTML(row.status_label) + '</span>';
+}
+
+function sourceBadge(row) {
+  const source = row.water_source;
+  const tier = source.source_class === "unknown" ? "not_reported" : source.evidence_tier;
+  return '<span class="badge ' + escapeHTML(tier) + '">' + escapeHTML(source.source_label) + '</span>';
+}
+
+function displayMetric(row) {
+  const metric = METRICS[state.metric];
+  return metric.display(metricValue(row), row);
+}
+
+function showDetail(row) {
+  const yearLabel = state.year === "fy2024" ? "FY2024" : "FY2025";
+  const selected = row[state.year];
+  const source = row.water_source;
+  const coupling = row.hydro_coupled
+    ? "Flagged: " + (row.reservoir || "reservoir") + (row.dam ? " / " + row.dam : "")
+    : "Not flagged";
+  const sourceLink = source.detail_href
+    ? '<a href="' + escapeHTML(source.detail_href) + '" target="_blank" rel="noopener noreferrer">Open source detail</a>'
+    : "No link carried";
+  els.detail.innerHTML =
+    '<h3>' + escapeHTML(row.operator + ", " + row.location) + '</h3>' +
+    statusBadge(row) + ' ' + sourceBadge(row) +
+    '<dl>' +
+      '<dt>Selected view</dt><dd>' + escapeHTML(yearLabel + ", " + METRICS[state.metric].title) + '</dd>' +
+      '<dt>Displayed value</dt><dd><strong>' + escapeHTML(displayMetric(row)) + '</strong></dd>' +
+      '<dt>Cited seed WCI</dt><dd>' + (state.year === "fy2024" && row.reported_wci_2024 !== null ? row.reported_wci_2024.toFixed(2) : "Not applicable") + '</dd>' +
+      '<dt>Withdrawal</dt><dd>' + (selected.withdrawal === null ? "No update" : selected.withdrawal.toFixed(3).replace(/0+$/, "").replace(/\.$/, "") + " ML/day") + '</dd>' +
+      '<dt>Consumption</dt><dd>' + (selected.consumed === null ? "No update" : selected.consumed.toFixed(3).replace(/0+$/, "").replace(/\.$/, "") + " ML/day") + '</dd>' +
+      '<dt>Cooling</dt><dd>' + escapeHTML(row.cooling.replace("_", " ")) + '</dd>' +
+      '<dt>Grid region</dt><dd>' + escapeHTML(row.grid_region || "Not reported") + '</dd>' +
+      '<dt>Hydro coupling</dt><dd>' + escapeHTML(coupling) + '</dd>' +
+      '<dt>Source detail</dt><dd>' + sourceLink + '</dd>' +
+    '</dl>' +
+    '<p class="detail-note"><strong>Water-source evidence.</strong> ' + escapeHTML(source.evidence_note) + '</p>' +
+    (row.vintage_note ? '<p class="detail-note"><strong>Vintage note.</strong> ' + escapeHTML(row.vintage_note) + '</p>' : '') +
+    (row.range_flag ? '<p class="detail-note"><strong>Range flag.</strong> ' + escapeHTML(row.range_flag) + '</p>' : '');
+}
+
+function renderBars(rows) {
+  const metric = METRICS[state.metric];
+  const available = rows.filter(row => metricValue(row) !== null).sort((a, b) => metricValue(b) - metricValue(a));
+  const max = available.length ? Math.max(...available.map(metricValue)) : 0;
+  if (!available.length) {
+    els.bars.innerHTML = '<p class="empty">No rows have this metric for the current selection.</p>';
+    return;
+  }
+  els.bars.innerHTML = available.map(row => {
+    const value = metricValue(row);
+    const rowIndex = DATA.indexOf(row);
+    const width = max ? Math.max(1.5, value / max * 100) : 0;
+    const fillClass = row.status === "planning_not_measured" ? " planning" : (row.status === "framework_secondary" ? " secondary" : "");
+    return '<div class="bar-row">' +
+      '<div class="bar-label"><button type="button" data-index="' + rowIndex + '">' + escapeHTML(row.operator) + '</button><small>' + escapeHTML(row.location) + '</small></div>' +
+      '<div class="bar-track" aria-hidden="true"><div class="bar-fill' + fillClass + '" style="width:' + width.toFixed(2) + '%"></div></div>' +
+      '<div class="bar-value">' + escapeHTML(metric.display(value, row)) + '</div>' +
+    '</div>';
+  }).join("");
+}
+
+function renderTable(rows) {
+  const sorted = [...rows].sort((a, b) => {
+    const av = metricValue(a);
+    const bv = metricValue(b);
+    if (av === null && bv !== null) return 1;
+    if (av !== null && bv === null) return -1;
+    if (av !== bv) return (bv || 0) - (av || 0);
+    return (a.operator + a.location).localeCompare(b.operator + b.location);
+  });
+  els.body.innerHTML = sorted.map(row =>
+    '<tr>' +
+      '<td><button type="button" class="site-button" data-index="' + DATA.indexOf(row) + '">' + escapeHTML(row.operator + ", " + row.location) + '</button></td>' +
+      '<td>' + statusBadge(row) + '</td>' +
+      '<td>' + sourceBadge(row) + '</td>' +
+      '<td>' + escapeHTML(row.cooling.replace("_", " ")) + '</td>' +
+      '<td>' + (row.hydro_coupled ? "Flagged" : "No flag") + '</td>' +
+      '<td class="num">' + escapeHTML(displayMetric(row)) + '</td>' +
+    '</tr>'
+  ).join("");
+  els.count.textContent = sorted.length + " displayed of " + DATA.length + " seed rows. " + sorted.filter(row => metricValue(row) !== null).length + " have the selected metric.";
+}
+
+function renderSplit() {
+  const row = DATA.find(item => item.operator === "Google" && item.location === "Douglas Co., GA");
+  const split = row && row.water_source;
+  if (!split || split.total_2024_Mgal === null || split.total_2025_Mgal === null) {
+    document.getElementById("split-chart").innerHTML = '<p class="empty">No explicit source split is available.</p>';
+    return;
+  }
+  const years = [
+    {label: "FY2024", total: split.total_2024_Mgal, potable: split.potable_2024_Mgal, reclaimed: split.reclaimed_2024_Mgal},
+    {label: "FY2025", total: split.total_2025_Mgal, potable: split.potable_2025_Mgal, reclaimed: split.reclaimed_2025_Mgal}
+  ];
+  document.getElementById("split-chart").innerHTML = years.map(item => {
+    const potableWidth = item.potable / item.total * 100;
+    const reclaimedWidth = item.reclaimed / item.total * 100;
+    return '<div class="split-row">' +
+      '<div class="split-label"><span>' + item.label + '</span><span>' + item.total.toFixed(1) + ' million gallons total</span></div>' +
+      '<div class="split-track" title="Reclaimed ' + item.reclaimed.toFixed(1) + '; potable ' + item.potable.toFixed(1) + ' million gallons">' +
+        '<div class="split-reclaimed" style="width:' + reclaimedWidth.toFixed(3) + '%"></div>' +
+        '<div class="split-potable" style="width:' + potableWidth.toFixed(3) + '%"></div>' +
+      '</div>' +
+      '<div class="legend"><span class="reclaimed">Reclaimed ' + item.reclaimed.toFixed(1) + '</span><span class="potable">Potable ' + item.potable.toFixed(1) + ' million gallons</span></div>' +
+    '</div>';
+  }).join("");
+}
+
+function bindSiteButtons() {
+  document.querySelectorAll("[data-index]").forEach(button => {
+    button.addEventListener("click", () => {
+      const row = DATA[Number(button.dataset.index)];
+      if (row) showDetail(row);
+    });
+  });
+}
+
+function render() {
+  const rows = selectedRows();
+  const metric = METRICS[state.metric];
+  els.chartTitle.textContent = metric.title + (state.metric === "offsite" ? "" : ", " + (state.year === "fy2024" ? "FY2024" : "FY2025"));
+  els.chartNote.textContent = metric.note;
+  els.metricHead.textContent = metric.head;
+  document.getElementById("kpi-seed").textContent = DATA.length;
+  document.getElementById("kpi-visible").textContent = rows.length;
+  document.getElementById("kpi-available").textContent = rows.filter(row => metricValue(row) !== null).length;
+  document.getElementById("kpi-sources").textContent = rows.filter(row => row.water_source.source_class !== "unknown").length;
+  document.getElementById("kpi-available-note").textContent = state.metric === "offsite" ? "Modelled bands" : "For " + (state.year === "fy2024" ? "FY2024" : "FY2025");
+  renderBars(rows);
+  renderTable(rows);
+  bindSiteButtons();
+}
+
+document.querySelectorAll("[data-year]").forEach(button => {
+  button.addEventListener("click", () => {
+    state.year = button.dataset.year;
+    document.querySelectorAll("[data-year]").forEach(item => {
+      const active = item === button;
+      item.classList.toggle("active", active);
+      item.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+    render();
+  });
+});
+document.getElementById("metric").addEventListener("change", event => { state.metric = event.target.value; render(); });
+document.getElementById("status").addEventListener("change", event => { state.status = event.target.value; render(); });
+document.getElementById("source").addEventListener("change", event => { state.source = event.target.value; render(); });
+document.getElementById("search").addEventListener("input", event => { state.search = event.target.value; render(); });
+
+renderSplit();
+render();
+</script>
+</body>
+</html>

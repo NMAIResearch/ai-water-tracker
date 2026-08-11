@@ -16,6 +16,20 @@ scary numbers; every input named and motive-tagged.
 
     WCI = C_peak / K = (W/K) * r * PF
 
+## Interactive explorer
+
+[Open the AI Data-Centre Water Evidence Explorer](https://nmairesearch.github.io/ai-water-tracker/).
+
+The self-contained page compares FY2024 and FY2025 withdrawal, estimated
+consumption, recomputed WCI and modelled off-site water share. Evidence-status
+filters keep planning figures separate from measured rows. A conservative
+water-source overlay distinguishes potable, reclaimed, surface-water and
+groundwater evidence only where the source ledger supports it; all other rows
+remain labelled unknown.
+
+The explorer is interactive, not live metering. The dataset remains a dated,
+hand-curated snapshot of non-standardised public disclosures.
+
 ## Quick start
 
     python3 reproduce.py            # print the table + flags + relocation ledger
@@ -41,6 +55,11 @@ cleared.
 - `SOURCES.md`: the source ledger. Per-row sources for all ten sites, the inputs
   that are estimates rather than site measurements, the Layer 2 and Layer 3 sources,
   the tier scheme carried in `sites.csv`, and the known limits.
+- `index.html`: dependency-free GitHub Pages explorer with the data embedded.
+- `build_tool.py`: regenerates the embedded data from `sites.csv` and
+  `water_source_evidence.csv`, or checks that the page is current with `--check`.
+- `water_source_evidence.csv`: explicit source classifications only; omission
+  means unknown rather than inferred.
 
 ## Status (2026-08-08, v0.5)
 - Layer 1 (WCI reproduced + opened): working. 10 Ren seed sites load; 8/10

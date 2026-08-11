@@ -1,0 +1,4 @@
+operator,location,source_class,source_label,evidence_tier,evidence_note,detail_href,total_2024_Mgal,potable_2024_Mgal,reclaimed_2024_Mgal,total_2025_Mgal,potable_2025_Mgal,reclaimed_2025_Mgal
+Google,"Douglas Co., GA",reclaimed_potable,Reclaimed + potable,primary,"Google reports both sources. The WCI uses total withdrawal, so the source split is a separate evidence layer.",AI_Water_Tracker_2026-08-08.md,444.1,7.4,436.7,440.6,46.3,394.3
+Google,"Mayes Co., OK",surface_water,Surface water,primary,"Utility open records identify the MidAmerica Industrial Park intake on the Neosho River. No potable and reclaimed split is reported.",SOURCES.md,,,,,,
+xAI,"Memphis, TN",aquifer_municipal,Aquifer + municipal potable,framework_secondary,"The reported current band includes Memphis Sand Aquifer draw and committed municipal drinking-water supply. No source-volume split is carried.",SOURCES.md,,,,,,

@@ -1,0 +1,2 @@
+operator,location,source_class,source_label,evidence_tier,evidence_note,detail_href,total_2024_Mgal,potable_2024_Mgal,reclaimed_2024_Mgal,total_2025_Mgal,potable_2025_Mgal,reclaimed_2025_Mgal
+ExampleCo,"River Site, ZZ",reclaimed_potable,Reclaimed + potable,primary,"Synthetic evidence fixture.",fixture.md,100,20,80,120,30,90
