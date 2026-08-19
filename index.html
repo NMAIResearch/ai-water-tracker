@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en-GB" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,26 +7,53 @@
 <title>AI Data-Centre Water Evidence Explorer</title>
 <style>
   :root {
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+  html[data-theme="light"] {
     --navy: #1a365d;
-    --blue: #2b6cb0;
+    --blue: #2563eb;
     --cyan: #0e7490;
     --slate: #4a5568;
     --body: #2d3748;
-    --muted: #718096;
-    --line: #dfe6ee;
-    --alt: #f7fafc;
-    --panel: #fbfdff;
-    --white: #ffffff;
-    --good: #276749;
-    --good-bg: #f0fff4;
-    --warn: #975a16;
-    --warn-bg: #fffaf0;
-    --bad: #9b2c2c;
-    --bad-bg: #fff5f5;
+    --muted: #64748b;
+    --line: #cbd5e1;
+    --alt: #f1f5f9;
+    --panel: #ffffff;
+    --white: #f8fafc;
+    --card-bg: #ffffff;
+    --good: #15803d;
+    --good-bg: #f0fdf4;
+    --warn: #b45309;
+    --warn-bg: #fffbeb;
+    --bad: #b91c1c;
+    --bad-bg: #fef2f2;
     --unknown: #5f6b7a;
     --unknown-bg: #edf2f7;
     --reclaimed: #2c7a7b;
-    --potable: #2b6cb0;
+    --potable: #2563eb;
+  }
+  html[data-theme="dark"] {
+    --navy: #ffffff;
+    --blue: #38bdf8;
+    --cyan: #38bdf8;
+    --slate: #94a3b8;
+    --body: #f1f5f9;
+    --muted: #64748b;
+    --line: #1e293b;
+    --alt: #162032;
+    --panel: #111827;
+    --white: #0b0f19;
+    --card-bg: #111827;
+    --good: #34d399;
+    --good-bg: rgba(52,211,153,0.15);
+    --warn: #f59e0b;
+    --warn-bg: rgba(245,158,11,0.15);
+    --bad: #f87171;
+    --bad-bg: rgba(248,113,113,0.15);
+    --unknown: #94a3b8;
+    --unknown-bg: #1e293b;
+    --reclaimed: #2dd4bf;
+    --potable: #38bdf8;
   }
   * { box-sizing: border-box; }
   body {
@@ -36,7 +63,18 @@
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1.48;
     -webkit-font-smoothing: antialiased;
+    transition: background .15s, color .15s;
   }
+  .header-bar { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+  .theme-toggle-btn { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--line); background: var(--panel); color: var(--body); cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+  .theme-toggle-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .panel, .table-wrap, .summary-card, .detail-card, .chart-card { background: var(--card-bg)!important; border: 1px solid var(--line)!important; }
+  .control input, .control select { background: var(--panel)!important; color: var(--body)!important; border-color: var(--line)!important; }
+  .segment button { background: var(--panel); color: var(--body); border: 1px solid var(--line); }
+  .segment button.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  table thead th { background: var(--alt)!important; color: var(--navy)!important; border-bottom: 2px solid var(--line)!important; }
+  table tbody tr { border-bottom: 1px solid var(--line)!important; }
+  table tbody tr:hover { background: var(--alt)!important; }
   a { color: var(--blue); }
   button, input, select { font: inherit; }
   button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
@@ -190,9 +228,17 @@
 </head>
 <body>
 <main class="wrap">
-  <p class="portfolio-link"><a href="https://nmairesearch.github.io/">&larr; NM AI Research portfolio</a></p>
-  <h1>AI Data-Centre Water Evidence Explorer</h1>
-  <p class="lede">Compare water withdrawal, estimated consumption, Water Consumption Impact and modelled off-site water across the tracker's ten-site seed. Every planning figure and unknown source remains visible as such.</p>
+  <div class="header-bar">
+    <div>
+      <p class="portfolio-link"><a href="https://nmairesearch.github.io/">&larr; NM AI Research portfolio</a></p>
+      <h1>AI Data-Centre Water Evidence Explorer</h1>
+      <p class="lede">Compare water withdrawal, estimated consumption, Water Consumption Impact and modelled off-site water across the tracker's ten-site seed. Every planning figure and unknown source remains visible as such.</p>
+    </div>
+    <button id="themeToggle" class="theme-toggle-btn" title="Toggle Light/Dark Theme">
+      <span id="themeIcon">◑</span>
+      <span id="themeLabel">THEME: LIGHT</span>
+    </button>
+  </div>
   <p class="stamp">Interactive front end over the frozen v0.5 dataset, published 8 August 2026. Water-source overlay checked 11 August 2026. <a href="https://doi.org/10.5281/zenodo.21318960" target="_blank" rel="noopener noreferrer">DOI 10.5281/zenodo.21318960</a>. CC BY 4.0.</p>
 
   <div class="notice"><strong>Interactive, not live metering.</strong> The source reports are periodic and non-standardised. The WCI uses total withdrawal regardless of source. Potable, reclaimed, surface-water and groundwater labels appear only where the source ledger supports them; all other rows remain unknown.</div>
@@ -974,9 +1020,31 @@ document.getElementById("metric").addEventListener("change", event => { state.me
 document.getElementById("status").addEventListener("change", event => { state.status = event.target.value; render(); });
 document.getElementById("source").addEventListener("change", event => { state.source = event.target.value; render(); });
 document.getElementById("search").addEventListener("input", event => { state.search = event.target.value; render(); });
-
 renderSplit();
 render();
+
+(function(){
+  var html = document.documentElement;
+  var btn = document.getElementById('themeToggle');
+  var lbl = document.getElementById('themeLabel');
+  var ico = document.getElementById('themeIcon');
+  function apply(theme){
+    html.setAttribute('data-theme', theme);
+    localStorage.setItem('nmai-theme', theme);
+    if(lbl && ico){
+      if(theme === 'dark'){ lbl.textContent = 'THEME: DARK'; ico.textContent = '◐'; }
+      else { lbl.textContent = 'THEME: LIGHT'; ico.textContent = '◑'; }
+    }
+  }
+  var saved = localStorage.getItem('nmai-theme') || 'light';
+  apply(saved);
+  if(btn){
+    btn.addEventListener('click', function(){
+      var curr = html.getAttribute('data-theme') || 'light';
+      apply(curr === 'dark' ? 'light' : 'dark');
+    });
+  }
+})();
 </script>
 </body>
 </html>
