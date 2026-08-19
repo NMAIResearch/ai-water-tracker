@@ -39,6 +39,12 @@
     --unknown-bg: #edf2f7;
     --reclaimed: #2c7a7b;
     --potable: #2563eb;
+    --fill: #1a365d;
+    --fill-fg: #f8fafc;
+    --notice-bg: #f0f7ff;
+    --notice-bd: #cbdff5;
+    --planning: #c05621;
+    --secondary: #6b46c1;
   }
   html[data-theme="dark"] {
     --navy: #ffffff;
@@ -62,6 +68,12 @@
     --unknown-bg: #1e293b;
     --reclaimed: #2dd4bf;
     --potable: #38bdf8;
+    --fill: #1e293b;
+    --fill-fg: #f1f5f9;
+    --notice-bg: rgba(56,189,248,0.10);
+    --notice-bd: rgba(56,189,248,0.30);
+    --planning: #fb923c;
+    --secondary: #a78bfa;
   }
   * { box-sizing: border-box; }
   body {
@@ -79,7 +91,7 @@
   .panel, .table-wrap, .summary-card, .detail-card, .chart-card { background: var(--card-bg)!important; border: 1px solid var(--line)!important; }
   .control input, .control select { background: var(--panel)!important; color: var(--body)!important; border-color: var(--line)!important; }
   .segment button { background: var(--panel); color: var(--body); border: 1px solid var(--line); }
-  .segment button.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .segment button.active { background: var(--fill); color: var(--fill-fg); border-color: var(--fill); }
   table thead th { background: var(--alt)!important; color: var(--navy)!important; border-bottom: 2px solid var(--line)!important; }
   table tbody tr { border-bottom: 1px solid var(--line)!important; }
   table tbody tr:hover { background: var(--alt)!important; }
@@ -100,13 +112,13 @@
   .notice {
     margin: 22px 0 18px;
     padding: 14px 16px;
-    background: #f0f7ff;
-    border: 1px solid #cbdff5;
+    background: var(--notice-bg);
+    border: 1px solid var(--notice-bd);
     border-left: 5px solid var(--blue);
     border-radius: 7px;
     font-size: 14px;
   }
-  .notice strong { color: var(--navy); }
+  .notice strong { color: var(--blue); }
   .controls {
     display: grid;
     grid-template-columns: repeat(5, minmax(145px, 1fr));
@@ -132,10 +144,10 @@
     padding: 8px 10px;
     color: var(--body);
     background: var(--white);
-    border: 1px solid #cbd5e0;
+    border: 1px solid var(--line);
     border-radius: 6px;
   }
-  .segment { display: inline-flex; width: 100%; overflow: hidden; border: 1px solid var(--navy); border-radius: 6px; }
+  .segment { display: inline-flex; width: 100%; overflow: hidden; border: 1px solid var(--line); border-radius: 6px; }
   .segment button {
     flex: 1;
     min-height: 36px;
@@ -145,8 +157,8 @@
     background: var(--white);
     cursor: pointer;
   }
-  .segment button + button { border-left: 1px solid var(--navy); }
-  .segment button.active { color: var(--white); background: var(--navy); font-weight: bold; }
+  .segment button + button { border-left: 1px solid var(--line); }
+  .segment button.active { color: var(--fill-fg); background: var(--fill); font-weight: bold; }
   .kpis {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -166,10 +178,10 @@
   .bar-label { min-width: 0; }
   .bar-label button { padding: 0; border: 0; background: none; color: var(--navy); text-align: left; cursor: pointer; font-weight: bold; }
   .bar-label small { display: block; overflow: hidden; color: var(--muted); text-overflow: ellipsis; white-space: nowrap; }
-  .bar-track { height: 16px; overflow: hidden; background: #edf2f7; border-radius: 4px; }
+  .bar-track { height: 16px; overflow: hidden; background: var(--unknown-bg); border-radius: 4px; }
   .bar-fill { height: 100%; min-width: 2px; border-radius: 4px; background: var(--blue); }
-  .bar-fill.planning { background: #c05621; }
-  .bar-fill.secondary { background: #6b46c1; }
+  .bar-fill.planning { background: var(--planning); }
+  .bar-fill.secondary { background: var(--secondary); }
   .bar-value { text-align: right; color: var(--body); font-size: 13px; font-weight: bold; font-variant-numeric: tabular-nums; }
   .empty { padding: 24px 0; color: var(--muted); text-align: center; }
   .detail { padding: 17px; }
@@ -200,7 +212,7 @@
   .legend .potable::before { background: var(--potable); }
   .table-wrap { margin-top: 18px; overflow-x: auto; border: 1px solid var(--line); border-radius: 9px; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  thead th { padding: 10px; color: var(--white); background: var(--navy); text-align: left; white-space: nowrap; }
+  thead th { padding: 10px; color: var(--fill-fg); background: var(--fill); text-align: left; white-space: nowrap; }
   thead th.num { text-align: right; }
   tbody td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
   tbody tr:nth-child(even) { background: var(--alt); }
