@@ -19,7 +19,7 @@ def resolve_default_shard() -> Path:
     candidates = [
         Path.cwd() / "sites.csv",
         Path(__file__).resolve().parents[2] / "sites.csv",
-        Path("/var/home/Noel/Desktop/ai-water-tracker/sites.csv"),
+        Path.home() / "Desktop" / "ai-water-tracker" / "sites.csv",
     ]
     for c in candidates:
         if c.is_file():

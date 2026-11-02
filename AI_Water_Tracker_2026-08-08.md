@@ -1,6 +1,6 @@
 # AI Data-Centre Water Tracker: an open, reproducible referee for data-centre water burden
 
-**NM AI Research** (ORCID 0009-0003-4213-7769) · 8 August 2026 · v0.5 working note
+**NMAI Research** (ORCID 0009-0003-4213-7769) · 8 August 2026 · v0.5 working note
 Repository: `sites.csv` + `reproduce.py` + `SOURCES.md` (stdlib Python, no dependencies) · CC BY 4.0
 
 *AI disclosure: parts of this text were artificially generated with AI assistance and reviewed by the author. The models, and the conflicts they create, are named in the Conflict of interest and scope section.*

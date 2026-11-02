@@ -172,7 +172,7 @@ No warranty is offered beyond the terms of the CC BY 4.0 licence. Independent
 analysis and open-science documentation only, not investment advice.
 
 ## Citation
-NM AI Research (2026). *AI Data-Centre Water Tracker: an open, reproducible referee
+NMAI Research (2026). *AI Data-Centre Water Tracker: an open, reproducible referee
 for data-centre water burden.* Zenodo. https://doi.org/10.5281/zenodo.21318960
 
 ## License
