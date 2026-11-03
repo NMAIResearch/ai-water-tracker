@@ -93,8 +93,8 @@ titles left-aligned, one accent colour.
 
 ## 6. Interview talking points (why this beats a sales-dashboard demo)
 - You modelled a real, sourced dataset, not a toy.
-- The `Status` flag is a data-quality/governance decision: two of ten widely cited
-  "sites" are non-operational planning figures, and the dashboard refuses to plot them
+- The `Status` flag is a data-quality/governance decision: non-operational
+  planning figures are labelled separately, and the dashboard refuses to plot them
   as measured. That is the analyst judgement, made visible.
 - The DAX measures separate a count from a rate (denominator discipline), the same
   habit your written work is built on.
